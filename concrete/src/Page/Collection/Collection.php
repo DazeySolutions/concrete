@@ -62,10 +62,8 @@ class Collection extends Object
 
             // there is nothing in the collections table for this page, so we create and grab
 
-            $data = array(
-                'handle' => $handle,
-            );
-            $cObj = self::createCollection($data);
+            $data['handle'] = $handle;
+            $cObj = self::addCollection($data);
         } else {
             $row = $r->fetchRow();
             if ($row['cID'] > 0 && $row['pcID'] == null) {
@@ -81,16 +79,6 @@ class Collection extends Object
     }
 
     public function addCollection($data)
-    {
-        $data['pThemeID'] = 0;
-        if (isset($this) && $this instanceof Page) {
-            $data['pThemeID'] = $this->getCollectionThemeID();
-        }
-
-        return static::createCollection($data);
-    }
-
-    public static function createCollection($data)
     {
         $db = Loader::db();
         $dh = Loader::helper('date');
@@ -133,9 +121,10 @@ class Collection extends Object
             $cvIsNew = $data['cvIsNew'];
         }
         $data['name'] = Loader::helper('text')->sanitize($data['name']);
-        $pThemeID = 0;
-        if (isset($data['pThemeID']) && $data['pThemeID']) {
-            $pThemeID = $data['pThemeID'];
+        if (isset($this) && $this instanceof Page) {
+            $pThemeID = $this->getCollectionThemeID();
+        } else {
+            $pThemeID = 0;
         }
 
         $pTemplateID = 0;
@@ -589,11 +578,7 @@ class Collection extends Object
             $bID = $r['bID'];
             $obj = StyleSet::getByID($issID);
             if (is_object($obj)) {
-                $b = new Block();
-                $b->bID = $bID;
-                $a = new Area($arHandle);
-                $b->setBlockAreaObject($a);
-                $obj = new BlockCustomStyle($obj, $b, $this->getCollectionThemeObject());
+                $obj = new BlockCustomStyle($obj, $bID, $arHandle);
                 $psss[] = $obj;
                 CacheLocal::set(
                           'pssObject',
@@ -607,8 +592,7 @@ class Collection extends Object
             $issID = $r['issID'];
             $obj = StyleSet::getByID($issID);
             if (is_object($obj)) {
-                $a = new Area($r['arHandle']);
-                $obj = new AreaCustomStyle($obj, $a, $this->getCollectionThemeObject());
+                $obj = new AreaCustomStyle($obj, $r['arHandle']);
                 $psss[] = $obj;
                 CacheLocal::set(
                           'pssObject',
@@ -641,11 +625,7 @@ class Collection extends Object
                         $issID = $r['issID'];
                         $obj = StyleSet::getByID($issID);
                         if (is_object($obj)) {
-                            $b = new Block();
-                            $b->bID = $r['bID'];
-                            $a = new Area($r['arHandle']);
-                            $b->setBlockAreaObject($a);
-                            $obj = new BlockCustomStyle($obj, $b, $this->getCollectionThemeObject());
+                            $obj = new BlockCustomStyle($obj, $r['bID'], $r['arHandle']);
                             $psss[] = $obj;
                             CacheLocal::set(
                                       'pssObject',
@@ -662,7 +642,7 @@ class Collection extends Object
         foreach ($psss as $st) {
             $css = $st->getCSS();
             if ($css !== '') {
-                $styleHeader .= $st->getStyleWrapper($css);
+                $styleHeader .= '<style type="text/css" data-style-set="'.$st->getStyleSet()->getID().'">'.$css.'</style>';
             }
         }
 
@@ -689,8 +669,7 @@ class Collection extends Object
         $areaHandle = $area->getAreaHandle();
         if ($force || isset($styles[$areaHandle])) {
             $pss = isset($styles[$areaHandle]) ? StyleSet::getByID($styles[$areaHandle]) : null;
-            $a = new Area($areaHandle);
-            $result = new AreaCustomStyle($pss, $a, $this->getCollectionThemeObject());
+            $result = new AreaCustomStyle($pss, $areaHandle);
         }
 
         return $result;

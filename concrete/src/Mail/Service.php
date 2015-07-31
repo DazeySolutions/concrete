@@ -379,17 +379,6 @@ class Service
     }
 
     /**
-     * Set additional headers
-     *
-     * @param array $headers
-     * @param string $val
-     */
-    public function setAdditionalHeaders($headers)
-    {
-        $this->headers = $headers;
-    }
-
-    /**
      * Sends the email.
      *
      * @param bool $resetData Whether or not to reset the service to its default values.
@@ -414,7 +403,7 @@ class Service
                 }
             }
             if (!isset($from)) {
-                $from = array(Config::get('concrete.email.default.address'), Config::get('concrete.email.default.name'));
+                $from = array(Config::get('concrete.email.default.address'), Config::get('concrete.email.name'));
                 $fromStr = Config::get('concrete.email.default.address');
             }
 
@@ -452,9 +441,6 @@ class Service
                 $messageIdHeader = new \Zend\Mail\Header\MessageId();
                 $headers->addHeader($messageIdHeader);
             }
-            
-            $headers->addHeaders($this->headers);
-
             $messageIdHeader->setId();
 
             $body = new MimeMessage();

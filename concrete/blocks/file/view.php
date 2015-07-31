@@ -8,8 +8,8 @@ if ($fp->canViewFile()) {
 	}
 	?>
 	<div class="ccm-block-file">
-		<a href="<?php echo ($forceDownload ? $f->getForceDownloadURL() : $f->getDownloadURL()); ?>"><?php echo stripslashes($controller->getLinkText()) ?></a>
+		<a href="<?php echo View::url('/download_file', $controller->getFileID(),$cID) ?>"><?php echo stripslashes($controller->getLinkText()) ?></a>
 	</div>
 
 
-<? } ?>
+<?php } ?>

@@ -1,13 +1,12 @@
 <?php
-
 namespace Concrete\Authentication\Community;
 
 use Concrete\Core\Authentication\Type\Community\Service\Community;
 use Concrete\Core\Authentication\Type\OAuth\OAuth2\GenericOauth2TypeController;
-use Core;
 
 class Controller extends GenericOauth2TypeController
 {
+
     public function registrationGroupID()
     {
         return \Config::get('auth.community.registration.group');
@@ -38,7 +37,6 @@ class Controller extends GenericOauth2TypeController
         if (!$this->service) {
             $this->service = \Core::make('authentication/community');
         }
-
         return $this->service;
     }
 
@@ -52,7 +50,7 @@ class Controller extends GenericOauth2TypeController
 
     public function edit()
     {
-        $this->set('form', Core::make('helper/form'));
+        $this->set('form', \Loader::helper('form'));
         $this->set('apikey', \Config::get('auth.community.appid', ''));
         $this->set('apisecret', \Config::get('auth.community.secret', ''));
 
@@ -64,17 +62,16 @@ class Controller extends GenericOauth2TypeController
     /**
      * @return Array
      */
-    public function getAdditionalRequestParameters()
-    {
+    public function getAdditionalRequestParameters() {
         return array('state' => time());
     }
 
-    public function getExtractor($new = false)
-    {
+    public function getExtractor() {
         try {
-            return parent::getExtractor($new);
+            return parent::getExtractor();
         } catch (\Exception $e) {
             dd($e);
         }
     }
+
 }

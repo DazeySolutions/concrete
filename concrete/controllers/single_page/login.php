@@ -120,11 +120,6 @@ class Login extends PageController
                 $this->error->add($e->getMessage());
             }
         }
-
-        if (isset($at)) {
-            $this->set('lastAuthType', $at);
-        }
-
         $this->view();
     }
 

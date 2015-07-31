@@ -33,11 +33,11 @@ if (is_object($f)) {
     endif;
 } else if ($c->isEditMode()) { ?>
 
-    <div class="ccm-edit-mode-disabled-item"><?=t('Empty Image Block.')?></div>
+    <div class="ccm-edit-mode-disabled-item"><?php echo t('Empty Image Block.')?></div>
 
-<? } ?>
+<?php } ?>
 
-<?php if(is_object($foS)) { ?>
+<?php if(is_object($foS)) { ?>	
 <script>
 $(function() {
     $('.bID-<?php print $bID;?>')

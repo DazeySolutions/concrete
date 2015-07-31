@@ -66,7 +66,7 @@ class PageController extends Controller
      *
      * @param @string
      */
-    public function render($path, $pkgHandle = null)
+    public function render($path)
     {
         $view = $this->getViewObject();
 
@@ -76,9 +76,6 @@ class PageController extends Controller
         $b = $path . '.php';
 
         $r = $env->getRecord(DIRNAME_PAGES . '/' . $a);
-        if ($pkgHandle) {
-            $view->setPackageHandle($pkgHandle);
-        }
         if ($r->exists()) {
             $view->renderSinglePageByFilename($a);
         } else {

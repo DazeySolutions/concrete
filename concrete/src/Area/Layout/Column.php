@@ -7,7 +7,7 @@ use \Concrete\Core\Area\SubArea;
 use Page;
 use Area;
 
-abstract class Column extends Object implements ColumnInterface
+abstract class Column extends Object
 {
 
     /**
@@ -36,8 +36,8 @@ abstract class Column extends Object implements ColumnInterface
     public $arID;
 
     abstract static public function getByID($arLayoutColumnID);
-    abstract public function exportDetails($node);
     abstract public function getAreaLayoutColumnClass();
+    abstract public function exportDetails($node);
 
     /**
      * @param int $arLayoutColumnID
@@ -147,44 +147,24 @@ abstract class Column extends Object implements ColumnInterface
     }
 
     /**
-     * @return string
-     */
-    public function getContents($disableControls = false)
-    {
-        ob_start();
-        $this->display($disableControls);
-        $contents = ob_get_contents();
-        ob_end_clean();
-        return $contents;
-    }
-
-    protected function getSubAreaMaximumColumns()
-    {
-        return 0;
-    }
-
-    /**
      * @param bool $disableControls
      */
     public function display($disableControls = false)
     {
         $layout = $this->getAreaLayoutObject();
         $a = $layout->getAreaObject();
-        if (is_object($a)) {
-            $as = new SubArea($this->getAreaLayoutColumnDisplayID(), $a->getAreaHandle(), $a->getAreaID());
-            $as->setAreaGridMaximumColumns($this->getSubAreaMaximumColumns());
-            $as->setAreaDisplayName(t('Column %s', $this->getAreaLayoutColumnIndex() + 1));
-            if ($disableControls) {
-                $as->disableControls();
-            }
-            $c = $a->getAreaCollectionObject();
-            $as->load($c);
-            if (!$this->getAreaID()) {
-                $this->setAreaID($as->getAreaID());
-            }
-            $as->setSubAreaBlockObject($this->arLayout->getBlockObject());
-            $as->display($c);
+        $as = new SubArea($this->getAreaLayoutColumnDisplayID(), $a->getAreaHandle(), $a->getAreaID());
+        $as->setAreaDisplayName(t('Column %s', $this->getAreaLayoutColumnIndex() + 1));
+        if ($disableControls) {
+            $as->disableControls();
         }
+        $c = $a->getAreaCollectionObject();
+        $as->load($c);
+        if (!$this->getAreaID()) {
+            $this->setAreaID($as->getAreaID());
+        }
+        $as->setSubAreaBlockObject($this->arLayout->getBlockObject());
+        $as->display($c);
     }
 
     /**

@@ -51,16 +51,6 @@ class Design extends BackendInterfaceBlockController {
                 $b->resetCustomStyle();
             }
 
-            if (isset($r['enableBlockContainer'])) {
-                if ($r['enableBlockContainer'] === '-1') {
-                    $b->resetBlockContainerSettings();
-                }
-                if ($r['enableBlockContainer'] === '0' ||
-                    $r['enableBlockContainer'] === '1') {
-                    $b->setCustomContainerSettings($r['enableBlockContainer']);
-                }
-            }
-
             if ($this->permissions->canEditBlockCustomTemplate()) {
                 $data = array();
                 $data['bFilename'] = $r['bFilename'];
@@ -79,10 +69,10 @@ class Design extends BackendInterfaceBlockController {
 
             if (is_object($set)) {
                 $pr->setAdditionalDataAttribute('issID', $set->getID());
-                $style = new CustomStyle($set, $b, $this->page->getCollectionThemeObject());
+                $style = new CustomStyle($set, $b->getBlockID(), $this->area->getAreaHandle());
                 $css = $style->getCSS();
                 if ($css !== '') {
-                    $pr->setAdditionalDataAttribute('css', $style->getStyleWrapper($css));
+                    $pr->setAdditionalDataAttribute('css', $css);
                 }
             }
 

@@ -489,7 +489,7 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
         $db = Loader::db();
         $db->Replace(
             'Areas',
-            array('cID' => $c->getCollectionID(), 'arHandle' => $arHandle, 'arIsGlobal' => $this->isGlobalArea() ? 1 : 0),
+            array('cID' => $c->getCollectionID(), 'arHandle' => $arHandle),
             array('arHandle', 'cID'),
             true
         );
@@ -784,7 +784,7 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
         if (!$this->arIsLoaded) {
             // replaces the current empty object with the passed object.
             $area = self::get($c, $this->arHandle);
-            if (!is_object($area) || get_class($area) !== get_class($this)) {
+            if (!is_object($area)) {
                 $area = $this->create($c, $this->arHandle);
             }
             $this->c = $c;
@@ -826,11 +826,8 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
      *
      * @return bool
      */
-    public function display($c = false, $alternateBlockArray = null)
+    public function display($c, $alternateBlockArray = null)
     {
-        if (!$c) {
-            $c = Page::getCurrentPage();
-        }
         $v = View::getRequestInstance();
 
         if (!is_object($c) || $c->isError()) {

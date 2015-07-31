@@ -27,9 +27,9 @@ class Type
     protected $ftTypeWidth = 0;
 
     /**
-     * @Column(type="integer", nullable=true)
+     * @Column(type="integer")
      */
-    protected $ftTypeHeight = null;
+    protected $ftTypeHeight;
 
     /**
      * @Column(type="boolean")
@@ -129,7 +129,7 @@ class Type
      */
     public function setHeight($ftTypeHeight)
     {
-        $this->ftTypeHeight = is_numeric($ftTypeHeight) ? $ftTypeHeight : null;
+        $this->ftTypeHeight = $ftTypeHeight;
     }
 
     /**

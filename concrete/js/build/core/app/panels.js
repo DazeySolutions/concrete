@@ -118,27 +118,21 @@ function ConcretePanel(options) {
             return false;
         });
         $panel.find('[data-panel-navigation=back]').on('click.navigate', function () {
-            obj.goBack();
+            obj.closePanelDetailImmediately();
+            $(this)
+                .queue(function () {
+                    var $prev = $panel.find('.ccm-panel-content-visible').prev();
+                    $panel.find('.ccm-panel-content-visible').removeClass('ccm-panel-content-visible').addClass('ccm-panel-slide-right');
+                    $prev.removeClass('ccm-panel-slide-left').addClass('ccm-panel-content-visible');
+                    $(this).dequeue();
+                })
+                .delay(500)
+                .queue(function () {
+                    $panel.find('.ccm-panel-slide-right').remove();
+                    $(this).dequeue();
+                });
             return false;
         });
-    };
-
-    this.goBack = function() {
-        var $panel = $('#' + this.getDOMID());
-        this.closePanelDetailImmediately();
-
-        $panel
-            .queue(function () {
-                var $prev = $panel.find('.ccm-panel-content-visible').prev();
-                $panel.find('.ccm-panel-content-visible').removeClass('ccm-panel-content-visible').addClass('ccm-panel-slide-right');
-                $prev.removeClass('ccm-panel-slide-left').addClass('ccm-panel-content-visible');
-                $panel.dequeue();
-            })
-            .delay(500)
-            .queue(function () {
-                $panel.find('.ccm-panel-slide-right').remove();
-                $panel.dequeue();
-            });
     };
 
     this.showPanelConfirmationMessage = function (id, msg, buttons) {
@@ -245,23 +239,22 @@ function ConcretePanel(options) {
             data: ''
         }, overrides);
         var identifier = options.identifier;
+        if (obj.detail) {
+            //options.transition = 'none';
+        }
         // if a panel is already open, we close it immediately
         if (obj.detail) {
             obj.closePanelDetailImmediately();
         }
         obj.detail = options;
-
         var detailID = 'ccm-panel-detail-' + identifier;
-
         var $detail = $('<div />', {
             id: detailID,
             class: 'ccm-panel-detail'
         }).appendTo(document.body);
-
         var $content = $('<div />', {
             class: 'ccm-panel-detail-content'
         }).appendTo($detail);
-
         $('div.ccm-page')
             .queue(function () {
                 $detail.addClass('ccm-panel-detail-transition-' + options.transition);
@@ -275,32 +268,19 @@ function ConcretePanel(options) {
                 $(this).dequeue();
             });
         html.addClass('ccm-panel-detail-open');
-
-        var complete_function = function () {
-            Concrete.event.publish('PanelOpenDetail', {
-                panel: options,
-                panelObj: obj,
-                container: $content
-            });
-        };
-
-        if (options.url) {
-            $content.load(options.url + '?cID=' + CCM_CID + options.data, function () {
-                jQuery.fn.dialog.hideLoader();
-                $content.find('.launch-tooltip').tooltip({'container': '#ccm-tooltip-holder'});
-                $content.find('a[data-help-notification-toggle]').concreteHelpLauncher();
-                obj.loadPanelDetailActions($content);
-
-                _.defer(complete_function);
-            });
-        } else {
+        $content.load(options.url + '?cID=' + CCM_CID + options.data, function () {
             jQuery.fn.dialog.hideLoader();
             $content.find('.launch-tooltip').tooltip({'container': '#ccm-tooltip-holder'});
             $content.find('a[data-help-notification-toggle]').concreteHelpLauncher();
             obj.loadPanelDetailActions($content);
 
-            _.defer(complete_function);
-        }
+            _.defer(function() {
+                Concrete.event.publish('PanelOpenDetail', {
+                    panel: options,
+                    container: $content
+                });
+            });
+        });
     };
 
     this.loadPanelDetailActions = function ($content) {
@@ -385,7 +365,7 @@ function ConcretePanel(options) {
             $('.ccm-panel-menu-item-active').removeClass('ccm-panel-menu-item-active');
             $(this).addClass('ccm-panel-menu-item-active');
             var identifier = $(this).attr('data-launch-panel-detail');
-            var panelDetailOptions = {'identifier': identifier, target: $(this)};
+            var panelDetailOptions = {'identifier': identifier};
             if ($(this).attr('data-panel-transition')) {
                 panelDetailOptions.transition = $(this).attr('data-panel-transition');
             }

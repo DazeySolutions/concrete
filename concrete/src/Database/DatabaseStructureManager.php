@@ -1,7 +1,6 @@
 <?php
 namespace Concrete\Core\Database;
 
-use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\DBAL\Schema\SchemaDiff;
 use Doctrine\ORM\EntityManager;
 use Core;
@@ -361,7 +360,7 @@ class DatabaseStructureManager
             foreach ($cmf->getAllMetadata() as $metaData) {
                 $this->metadatas[$metaData->getName()] = $metaData;
             }
-        } catch (MappingException $e) {
+        } catch (\Exception $e) {
             // we don't want them complaining about a src directory not being in the package.
         }
     }

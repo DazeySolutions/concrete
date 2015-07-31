@@ -16,4 +16,9 @@ return array(
     'proxy_exclusions' => array(
         DIR_BASE_CORE . '/' . DIRNAME_CLASSES . '/Support/',
     ),
+
+    /**
+     * The database charset
+     */
+    'charset' => 'utf8'
 );

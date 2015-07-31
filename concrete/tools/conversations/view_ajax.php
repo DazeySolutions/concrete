@@ -62,8 +62,8 @@ if (is_object($cnv)) {
 	$summary = $ml->getSummary();
 	$totalPages = $summary->pages;
 	$args = array(
-		'cID' => intval($_POST['cID']),
-		'bID' => intval($_POST['blockID']),
+		'cID' => $_POST['cID'],
+		'bID' => $_POST['blockID'],
 		'conversation' => $cnv,
 		'messages' => $ml->getPage(),
 		'displayMode' => $displayMode,

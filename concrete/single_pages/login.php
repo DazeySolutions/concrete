@@ -22,10 +22,14 @@ $image = date('Ymd') . '.jpg';
 
 $attribute_mode = (isset($required_attributes) && count($required_attributes));
 ?>
-
+<style>
+    body {
+        background: url("<?php echo ASSETS_URL_IMAGES ?>/bg_login.png");
+    }
+</style>
 <div class="login-page">
-    <div class="col-sm-6 col-sm-offset-3">
-        <h1><?= !$attribute_mode ? t('Sign In.') : t('Required Attributes') ?></h1>
+    <div class="col-sm-6 col-sm-offset-3 login-title">
+        <span><?php echo !$attribute_mode ? t('Sign into your website.') : t('Required Attributes') ?></span>
     </div>
     <div class="col-sm-6 col-sm-offset-3 login-form">
         <div class="row">
@@ -34,7 +38,7 @@ $attribute_mode = (isset($required_attributes) && count($required_attributes));
                 if ($attribute_mode) {
                     ?>
                     <i class="fa fa-question"></i>
-                    <span><?= t('Attributes') ?></span>
+                    <span><?php echo t('Attributes') ?></span>
                 <?php
                 } else if (count($activeAuths) > 1) {
                     ?>
@@ -42,8 +46,8 @@ $attribute_mode = (isset($required_attributes) && count($required_attributes));
                         <?php
                         foreach ($activeAuths as $auth) {
                             ?>
-                            <option value="<?= $auth->getAuthenticationTypeHandle() ?>">
-                                <?= $auth->getAuthenticationTypeName() ?>
+                            <option value="<?php echo $auth->getAuthenticationTypeHandle() ?>">
+                                <?php echo $auth->getAuthenticationTypeName() ?>
                             </option>
                         <?php
                         }
@@ -57,23 +61,23 @@ $attribute_mode = (isset($required_attributes) && count($required_attributes));
             </div>
         </div>
         <div class="row login-row">
-            <div <? if (count($activeAuths) < 2) { ?>style="display: none" <? } ?> class="types col-sm-4 hidden-xs">
+            <div class="types col-sm-4 hidden-xs">
                 <ul class="auth-types">
                     <?php
                     if ($attribute_mode) {
                         ?>
                         <li data-handle="required_attributes">
                             <i class="fa fa-question"></i>
-                            <span><?= t('Attributes') ?></span>
+                            <span><?php echo t('Attributes') ?></span>
                         </li>
                         <?php
                     } else {
                         /** @var AuthenticationType[] $activeAuths */
                         foreach ($activeAuths as $auth) {
                             ?>
-                            <li data-handle="<?= $auth->getAuthenticationTypeHandle() ?>">
-                                <?= $auth->getAuthenticationTypeIconHTML() ?>
-                                <span><?= $auth->getAuthenticationTypeName() ?></span>
+                            <li data-handle="<?php echo $auth->getAuthenticationTypeHandle() ?>">
+                                <?php echo $auth->getAuthenticationTypeIconHTML() ?>
+                                <span><?php echo $auth->getAuthenticationTypeName() ?></span>
                             </li>
                         <?php
                         }
@@ -81,12 +85,12 @@ $attribute_mode = (isset($required_attributes) && count($required_attributes));
                     ?>
                 </ul>
             </div>
-            <div class="controls <? if (count($activeAuths) < 2) { ?>col-sm-12<? } else { ?>col-sm-8<? } ?> col-xs-12">
+            <div class="controls col-sm-8 col-xs-12">
                 <?php
                 if ($attribute_mode) {
                     $attribute_helper = new Concrete\Core\Form\Service\Widget\Attribute();
                     ?>
-                    <form action="<?= View::action('fill_attributes') ?>" method="POST">
+                    <form action="<?php echo View::action('fill_attributes') ?>" method="POST">
                         <div data-handle="required_attributes"
                              class="authentication-type authentication-type-required-attributes">
                             <div class="ccm-required-attribute-form"
@@ -98,7 +102,7 @@ $attribute_mode = (isset($required_attributes) && count($required_attributes));
                                 ?>
                             </div>
                             <div class="form-group">
-                                <button class="btn btn-primary pull-right"><?= t('Submit') ?></button>
+                                <button class="btn btn-primary pull-right"><?php echo t('Submit') ?></button>
                             </div>
 
                         </div>
@@ -109,8 +113,8 @@ $attribute_mode = (isset($required_attributes) && count($required_attributes));
 
                     foreach ($activeAuths as $auth) {
                         ?>
-                        <div data-handle="<?= $auth->getAuthenticationTypeHandle() ?>"
-                             class="authentication-type authentication-type-<?= $auth->getAuthenticationTypeHandle() ?>">
+                        <div data-handle="<?php echo $auth->getAuthenticationTypeHandle() ?>"
+                             class="authentication-type authentication-type-<?php echo $auth->getAuthenticationTypeHandle() ?>">
                             <?php $auth->renderForm($authTypeElement ?: 'form', $authTypeParams ?: array()) ?>
                         </div>
                     <?php
@@ -120,46 +124,10 @@ $attribute_mode = (isset($required_attributes) && count($required_attributes));
             </div>
         </div>
     </div>
-     <div style="clear:both"></div>
-
-    <style type="text/css">
-
-        div.login-form hr {
-            margin-top: 10px !important;
-            margin-bottom: 5px !important;
-        }
-
-        ul.auth-types {
-            margin: 20px 0px 0px 0px;
-            padding: 0;
-        }
-
-        ul.auth-types > li > .fa,
-        ul.auth-types > li svg,
-        ul.auth-types > li .ccm-auth-type-icon {
-            position: absolute;
-            top: 2px;
-            left: 0px;
-        }
-
-        ul.auth-types > li {
-            list-style-type: none;
-            cursor: pointer;
-            padding-left: 25px;
-            margin-bottom: 15px;
-            transition: color .25s;
-            position: relative;
-        }
-
-        ul.auth-types > li:hover {
-            color: #cfcfcf;
-        }
-
-        ul.auth-types > li.active {
-            font-weight: bold;
-            cursor: auto;
-        }
-    </style>
+    <div class="background-credit" style="display:none">
+        <?php echo t('Photo Credit:') ?>
+        <a href="#" style="pull-right"></a>
+    </div>
 
     <script type="text/javascript">
         (function ($) {
@@ -194,6 +162,61 @@ $attribute_mode = (isset($required_attributes) && count($required_attributes));
             });
             types.first().click();
 
+            var title = $('.login-title').find('span');
+            title.css({
+                lineHeight: '1000px',
+                fontSize: 10
+            });
+
+            setTimeout(function() {
+                var start_height = title.parent().height(), size = 10, last;
+                while (title.parent().height() === start_height) {
+                    last = size++;
+                    title.css('font-size', size);
+                }
+                title.css({
+                    fontSize: last,
+                    lineHeight: ''
+                });
+                var fade_div = $('<div/>').css({
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%'
+                }).prependTo('body').height(title.offset().top + title.outerHeight() + 50);
+
+                fade_div.hide()
+                    .append(
+                    $('<img/>')
+                        .css({ width: '100%', height: '100%' })
+                        .attr('src', '<?php echo DIR_REL ?>/concrete/images/login_fade.png'))
+                    .fadeIn();
+            }, 0);
+
+
+            <?php if(Config::get('concrete.white_label.background_image') !== 'none') { ?>
+            $(function () {
+                var shown = false, info;
+                $.getJSON('<?php echo Core::getApplicationURL() . '/' . DISPATCHER_FILENAME . '/tools/required/dashboard/get_image_data' ?>', { image: '<?php echo $image ?>' }, function (data) {
+                    if (shown) {
+                        $('div.background-credit').fadeIn().children().attr('href', data.link).text(data.author.join());
+                    } else {
+                        info = data;
+                    }
+                });
+                $(window).on('backstretch.show', function() {
+                    shown = true;
+
+                    if (info) {
+                        $('div.background-credit').fadeIn().children().attr('href', info.link).text(info.author.join());
+                    }
+
+                });
+                $.backstretch("<?php echo Config::get('concrete.urls.background_feed') . '/' . $image ?>", {
+                    fade: 500
+                });
+            });
+            <?php } ?>
             $('ul.nav.nav-tabs > li > a').on('click', function () {
                 var me = $(this);
                 if (me.parent().hasClass('active')) return false;
@@ -203,15 +226,6 @@ $attribute_mode = (isset($required_attributes) && count($required_attributes));
                 $('div.authTypes > div').hide().filter('[data-authType="' + at + '"]').show();
                 return false;
             });
-
-            <?php
-            if (isset($lastAuthType)) {
-                ?>
-                $("ul.auth-types > li[data-handle='<?= $lastAuthType->getAuthenticationTypeHandle() ?>']")
-                    .trigger("click");
-                <?php
-            }
-            ?>
         })(jQuery);
     </script>
 </div>

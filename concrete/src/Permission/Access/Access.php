@@ -3,11 +3,11 @@
 namespace Concrete\Core\Permission\Access;
 
 use Concrete\Core\Foundation\Object;
+use Loader;
 use CacheLocal;
 use PermissionKey;
 use User;
 use Core;
-use Database;
 use Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
 use Concrete\Core\Permission\Duration as PermissionDuration;
 use Concrete\Core\Workflow\Workflow;
@@ -49,12 +49,12 @@ class Access extends Object
 
     protected function deliverAccessListItems($q, $accessType, $filterEntities)
     {
-        $db = Database::connection();
-        $class = '\\Concrete\\Core\\Permission\\Access\\ListItem\\' . Core::make('helper/text')->camelcase(
+        $db = Loader::db();
+        $class = '\\Concrete\\Core\\Permission\\Access\\ListItem\\' . Loader::helper('text')->camelcase(
                 $this->pk->getPermissionKeyCategoryHandle()
             ) . 'ListItem';
         if ($this->pk->permissionKeyHasCustomClass()) {
-            $class = '\\Concrete\\Core\\Permission\\Access\\ListItem\\' . Core::make('helper/text')->camelcase(
+            $class = '\\Concrete\\Core\\Permission\\Access\\ListItem\\' . Loader::helper('text')->camelcase(
                     $this->pk->getPermissionKeyHandle() . '_' . $this->pk->getPermissionKeyCategoryHandle()
                 ) . 'ListItem';
         }
@@ -194,13 +194,13 @@ class Access extends Object
 
     public function clearWorkflows()
     {
-        $db = Database::connection();
+        $db = Loader::db();
         $db->Execute('delete from PermissionAccessWorkflows where paID = ?', array($this->getPermissionAccessID()));
     }
 
     public function attachWorkflow(Workflow $wf)
     {
-        $db = Database::connection();
+        $db = Loader::db();
         $db->Replace(
             'PermissionAccessWorkflows',
             array('paID' => $this->getPermissionAccessID(), 'wfID' => $wf->getWorkflowID()),
@@ -211,7 +211,7 @@ class Access extends Object
 
     public function getWorkflows()
     {
-        $db = Database::connection();
+        $db = Loader::db();
         $r = $db->Execute(
             'select wfID from PermissionAccessWorkflows where paID = ?',
             array($this->getPermissionAccessID())
@@ -229,7 +229,7 @@ class Access extends Object
 
     public function duplicate($newPA = false)
     {
-        $db = Database::connection();
+        $db = Loader::db();
         if (!$newPA) {
             $newPA = self::create($this->pk);
         }
@@ -248,7 +248,7 @@ class Access extends Object
 
     public function markAsInUse()
     {
-        $db = Database::connection();
+        $db = Loader::db();
         $db->Execute('update PermissionAccess set paIsInUse = 1 where paID = ?', array($this->paID));
     }
 
@@ -257,7 +257,7 @@ class Access extends Object
         $durationObject = false,
         $accessType = PermissionKey::ACCESS_TYPE_INCLUDE
     ) {
-        $db = Database::connection();
+        $db = Loader::db();
         $pdID = 0;
         if ($durationObject instanceof PermissionDuration) {
             $pdID = $durationObject->getPermissionDurationID();
@@ -278,20 +278,20 @@ class Access extends Object
 
     public function removeListItem(PermissionAccessEntity $pe)
     {
-        $db = Database::connection();
+        $db = Loader::db();
         $db->Execute(
             'delete from PermissionAccessList where peID = ? and paID = ?',
             array($pe->getAccessEntityID(), $this->getPermissionAccessID())
         );
     }
 
-    public function save($args)
+    public function save()
     {
     }
 
     public static function create(PermissionKey $pk)
     {
-        $db = Database::connection();
+        $db = Loader::db();
         $db->Execute('insert into PermissionAccess (paIsInUse) values (0)');
 
         return static::getByID($db->Insert_ID(), $pk);
@@ -306,14 +306,14 @@ class Access extends Object
             return $item->get();
         }
 
-        $db = Database::connection();
+        $db = Loader::db();
 
         $handle = $pk->getPermissionKeyCategoryHandle();
         if ($pk->permissionKeyHasCustomClass()) {
             $handle = $pk->getPermissionKeyHandle() . '_' . $handle;
         }
 
-        $class = '\\Concrete\\Core\\Permission\\Access\\' . Core::make('helper/text')->camelcase($handle) . 'Access';
+        $class = '\\Concrete\\Core\\Permission\\Access\\' . Loader::helper('text')->camelcase($handle) . 'Access';
 
         $obj = null;
         if ($checkPA) {

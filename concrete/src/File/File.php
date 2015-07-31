@@ -176,17 +176,11 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         }
 
         $f = static::getByID($fID);
+        $path = $f->getRelativePath();
 
-        if ($f) {
-            $path = $f->getRelativePath();
-
-            CacheLocal::set('file_relative_path', $fID, $path);
-            return $path;
-        }
-
-        return false;
+        CacheLocal::set('file_relative_path', $fID, $path);
+        return $path;
     }
-
 
     protected function save()
     {

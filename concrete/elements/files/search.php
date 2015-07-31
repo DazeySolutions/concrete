@@ -40,12 +40,12 @@ $req = $flr->getSearchRequest();
             $fp = FilePermissions::getGlobal();
             if ($fp->canAddFile()) { ?>
                 <li class="ccm-file-manager-show-dialog ccm-file-manager-upload"><a href="javascript:void"><?php echo t('Upload Files')?><input type="file" name="files[]" multiple="multiple" /></a></li>
-                <li class="ccm-file-manager-show-dialog">        <a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/import"
+                <li class="ccm-file-manager-show-dialog">        <a href="<?php echo REL_DIR_FILES_TOOLS_REQUIRED?>/files/import"
                                class="dialog-launch"
                                dialog-width="500"
                                dialog-height="500"
                                dialog-modal="true"
-                               dialog-title="<?=t('Add Files')?>"><?=t('More Options')?></a>
+                               dialog-title="<?php echo t('Add Files')?>"><?php echo t('More Options')?></a>
 
 
                 </li>
@@ -77,12 +77,12 @@ $req = $flr->getSearchRequest();
     <div class="ccm-search-fields-advanced"></div>
     <div class="ccm-search-fields-row ccm-search-fields-submit">
         <div class="form-group form-group-full">
-            <label class="control-label"><?=t('Per Page')?></label>
+            <label class="control-label"><?php echo t('Per Page')?></label>
             <div class="ccm-search-field-content ccm-search-field-content-select2">
-                <?=$form->select('numResults', array(10 => t('10'), 20 => t('20'), 50 => t('50'), 100 => t('100'), 250 => t('250'), 500 => t('500'), 1000 => t('1000'))); ?>
+                <?php echo $form->select('numResults', array(10 => t('10'), 20 => t('20'), 50 => t('50'), 100 => t('100'), 250 => t('250'), 500 => t('500'), 1000 => t('1000'))); ?>
             </div>
         </div>
-        <button type="submit" class="btn btn-primary pull-right"><?=t('Search')?></button>
+        <button type="submit" class="btn btn-primary pull-right"><?php echo t('Search')?></button>
     </div>
 </form>
 </script>

@@ -281,14 +281,14 @@ class Dashboard
 
                 <div class="ccm-intelligent-search-results-module ccm-intelligent-search-results-module-onsite">
 
-                <h1><?=t($page->getCollectionName())?></h1>
+                <h1><?php echo t($page->getCollectionName())?></h1>
 
 
                 <ul class="ccm-intelligent-search-results-list">
                 <?php
                 if (count($ch2) == 0) {
                     ?>
-                    <li><a href="<?=$navHelper->getLinkTocollection($page)?>"><?=t($page->getCollectionName())?></a><span><?=t($page->getCollectionName())?> <?=t($page->getAttribute('meta_keywords'))?></span></li>
+                    <li><a href="<?php echo $navHelper->getLinkTocollection($page)?>"><?php echo t($page->getCollectionName())?></a><span><?php echo t($page->getCollectionName())?> <?php echo t($page->getAttribute('meta_keywords'))?></span></li>
                     <?php
                 }
                 ?>
@@ -296,7 +296,7 @@ class Dashboard
                 <?php
                 if ($page->getCollectionPath() == '/dashboard/system') {
                     ?>
-                    <li><a href="<?=$navHelper->getLinkTocollection($page)?>"><?=t('View All')?></a><span><?=t($page->getCollectionName())?> <?=t($page->getAttribute('meta_keywords'))?></span></li>
+                    <li><a href="<?php echo $navHelper->getLinkTocollection($page)?>"><?php echo t('View All')?></a><span><?php echo t($page->getCollectionName())?> <?php echo t($page->getAttribute('meta_keywords'))?></span></li>
                     <?php
                 }
 
@@ -312,7 +312,7 @@ class Dashboard
                     }
 
                     ?>
-                    <li><a href="<?=$navHelper->getLinkTocollection($subpage)?>"><?=t($subpage->getCollectionName())?></a><span><? if ($page->getCollectionPath() != '/dashboard/system') { ?><?=t($page->getCollectionName())?> <?=t($page->getAttribute('meta_keywords'))?> <? } ?><?=t($subpage->getCollectionName())?> <?=t($subpage->getAttribute('meta_keywords'))?></span></li>
+                    <li><a href="<?php echo $navHelper->getLinkTocollection($subpage)?>"><?php echo t($subpage->getCollectionName())?></a><span><?php if ($page->getCollectionPath() != '/dashboard/system') { ?><?php echo t($page->getCollectionName())?> <?php echo t($page->getAttribute('meta_keywords'))?> <?php } ?><?php echo t($subpage->getCollectionName())?> <?php echo t($subpage->getAttribute('meta_keywords'))?></span></li>
                     <?php
                 }
                 ?>
@@ -329,11 +329,11 @@ class Dashboard
 
             <div class="ccm-intelligent-search-results-module ccm-intelligent-search-results-module-onsite">
 
-            <h1><?=t('Dashboard Home')?></h1>
+            <h1><?php echo t('Dashboard Home')?></h1>
 
 
             <ul class="ccm-intelligent-search-results-list">
-                <li><a href="<?=URL::to('/dashboard/home')?>"><?=t('Customize')?> <span><?=t('Customize Dashboard Home')?></span></a></li>
+                <li><a href="<?php echo URL::to('/dashboard/home')?>"><?php echo t('Customize')?> <span><?php echo t('Customize Dashboard Home')?></span></a></li>
             </ul>
 
             </div>
@@ -343,7 +343,7 @@ class Dashboard
             ?>
 
             <div class="ccm-intelligent-search-results-module">
-            <h1><?=t('Your Site')?></h1>
+            <h1><?php echo t('Your Site')?></h1>
             <div class="loader">
                 <div class="dot dot1"></div>
                 <div class="dot dot2"></div>
@@ -357,7 +357,7 @@ class Dashboard
             <?php if (Config::get('concrete.external.intelligent_search_help')) {
                 ?>
             <div class="ccm-intelligent-search-results-module ccm-intelligent-search-results-module-offsite">
-            <h1><?=t('Help')?></h1>
+            <h1><?php echo t('Help')?></h1>
             <div class="loader">
                 <div class="dot dot1"></div>
                 <div class="dot dot2"></div>
@@ -374,7 +374,7 @@ class Dashboard
             <?php if (Config::get('concrete.marketplace.intelligent_search')) {
                 ?>
             <div class="ccm-intelligent-search-results-module ccm-intelligent-search-results-module-offsite">
-            <h1><?=t('Add-Ons')?></h1>
+            <h1><?php echo t('Add-Ons')?></h1>
             <div class="loader">
                 <div class="dot dot1"></div>
                 <div class="dot dot2"></div>

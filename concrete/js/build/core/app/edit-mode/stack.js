@@ -26,12 +26,12 @@
                 dragAreaBlockID = dragAreaBlock.getId();
             }
 
-            jQuery.fn.dialog.closeAll();
+            ConcretePanelManager.exitPanelMode();
 
             var settings = {
-                cID: elem.data('cid'),
+                cID: CCM_CID,
                 arHandle: area_handle,
-                stID: elem.data('sid'),
+                stID: elem.data('cid'),
                 atask: 'add_stack',
                 ccm_token: CCM_SECURITY_TOKEN
             };

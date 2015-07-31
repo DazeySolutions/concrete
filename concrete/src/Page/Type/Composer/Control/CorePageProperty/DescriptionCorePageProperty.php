@@ -1,8 +1,7 @@
 <?php
-
 namespace Concrete\Core\Page\Type\Composer\Control\CorePageProperty;
 
-use Core;
+use Loader;
 use Page;
 
 class DescriptionCorePageProperty extends CorePageProperty
@@ -22,7 +21,7 @@ class DescriptionCorePageProperty extends CorePageProperty
 
     public function validate()
     {
-        $e = Core::make('helper/validation/error');
+        $e = Loader::helper('validation/error');
         if (!$this->getPageTypeComposerControlDraftValue()) {
             $e->add(t('You must specify a page description.'));
 
@@ -30,10 +29,10 @@ class DescriptionCorePageProperty extends CorePageProperty
         }
     }
 
-    public function getRequestValue($args = false)
+    public function getRequestValue()
     {
-        $data = parent::getRequestValue($args);
-        $data['description'] = Core::make('helper/security')->sanitizeString($data['description']);
+        $data = parent::getRequestValue();
+        $data['description'] = Loader::helper('security')->sanitizeString($data['description']);
 
         return $data;
     }
@@ -46,4 +45,5 @@ class DescriptionCorePageProperty extends CorePageProperty
             return $c->getCollectionDescription();
         }
     }
+
 }

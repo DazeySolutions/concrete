@@ -25,10 +25,8 @@
 
     ConcreteAjaxBlockForm.prototype = Object.create(ConcreteAjaxForm.prototype);
 
-    ConcreteAjaxBlockForm.prototype.before = function (my) {
-        ConcreteEvent.fire('EditModeBeforeBlockSubmit', {
-            'form': my
-        });
+    ConcreteAjaxBlockForm.prototype.beforeSubmit = function (my) {
+        ConcreteAjaxForm.prototype.beforeSubmit.call(this, my);
     };
 
     ConcreteAjaxBlockForm.prototype.success = function (resp, my) {

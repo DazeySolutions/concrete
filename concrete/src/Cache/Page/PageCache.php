@@ -8,6 +8,7 @@ use \Page as ConcretePage;
 use \Concrete\Core\Page\View\PageView;
 use Permissions;
 use User;
+use Loader;
 use Session;
 
 abstract class PageCache {
@@ -29,11 +30,7 @@ abstract class PageCache {
 
 	public static function getLibrary() {
 		if (!PageCache::$library) {
-			$adapter = Config::get('concrete.cache.page.adapter');
-			$class = overrideable_core_class(
-				'Core\\Cache\\Page\\' . camelcase($adapter) . 'PageCache',
-				DIRNAME_CLASSES . '/Cache/Page/' . camelcase($adapter) . 'PageCache.php'
-			);
+			$class = '\\Concrete\\Core\\Cache\\Page\\' . Loader::helper('text')->camelcase(Config::get('concrete.cache.page.adapter')) . 'PageCache';
 			PageCache::$library = new $class();
 		}
 		return PageCache::$library;

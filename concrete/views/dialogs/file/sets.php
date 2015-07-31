@@ -1,9 +1,9 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<form method="post" data-dialog-form="save-file-set" action="<?=$controller->action('submit')?>">
+<form method="post" data-dialog-form="save-file-set" action="<?php echo $controller->action('submit')?>">
 
     <div class="ccm-ui">
-        <? Loader::element('files/add_to_sets', array(
+        <?php Loader::element('files/add_to_sets', array(
             'displayFileSet' => function($fileset) use ($f) {
                 $fp = new \Permissions($fileset);
                 if (!$fp->canAddFiles() || !$fp->canAddFileType(strtolower($f->getExtension()))) {
@@ -23,8 +23,8 @@
     </div>
 
     <div class="dialog-buttons">
-        <button class="btn btn-default pull-left" data-dialog-action="cancel"><?=t('Cancel')?></button>
-        <button type="button" data-dialog-action="submit" class="btn btn-primary pull-right"><?=t('Save')?></button>
+        <button class="btn btn-default pull-left" data-dialog-action="cancel"><?php echo t('Cancel')?></button>
+        <button type="button" data-dialog-action="submit" class="btn btn-primary pull-right"><?php echo t('Save')?></button>
     </div>
 
 </form>

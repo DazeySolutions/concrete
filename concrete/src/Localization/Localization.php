@@ -73,7 +73,7 @@ class Localization
                 $this->translate->addTranslationFile('gettext', $languageFile);
             }
             // Site language files
-            if (\Core::make('multilingual/detector')->isEnabled()) {
+            if (Config::get('concrete.multilingual.enabled')) {
                 $languageFile = DIR_LANGUAGES_SITE_INTERFACE . "/$locale.mo";
                 if (!is_file($languageFile)) {
                     $languageFile = '';

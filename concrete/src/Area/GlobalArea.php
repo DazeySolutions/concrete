@@ -9,23 +9,12 @@ use Stack;
 class GlobalArea extends Area
 {
 
-    protected $ignoreCurrentMultilingualLanguageSection = false;
-
     /**
      * @return bool
      */
     public function isGlobalArea()
     {
         return true;
-    }
-
-    /**
-     * If called on a multilingual website, this global area will not load its content from the language-specific global area stack. Instead, it'll use
-     * the stack in the default language, throughout the website.
-     */
-    public function ignoreCurrentLanguageSection()
-    {
-        $this->ignoreCurrentMultilingualLanguageSection = true;
     }
 
     /**
@@ -53,13 +42,11 @@ class GlobalArea extends Area
     }
 
     /**
-     * @param Page $c
-     *
      * @return int
      */
-    public function getTotalBlocksInArea($c = false)
+    public function getTotalBlocksInArea()
     {
-        $stack = $this->getGlobalAreaStackObject($c);
+        $stack = $this->getGlobalAreaStackObject();
         $ax = Area::get($stack, STACKS_AREA_NAME);
         if (is_object($ax)) {
             return $ax->getTotalBlocksInArea();
@@ -68,24 +55,16 @@ class GlobalArea extends Area
     }
 
     /**
-     * @param Page $c
-     *
      * @return Page
      */
-    protected function getGlobalAreaStackObject($c = false)
+    protected function getGlobalAreaStackObject()
     {
-        if (!$c) {
-            $c = Page::getCurrentPage();
-        }
+        $c = Page::getCurrentPage();
         $cp = new Permissions($c);
-        $contentSource = Stack::MULTILINGUAL_CONTENT_SOURCE_CURRENT;
-        if ($this->ignoreCurrentMultilingualLanguageSection) {
-            $contentSource = Stack::MULTILINGUAL_CONTENT_SOURCE_DEFAULT;
-        }
         if ($cp->canViewPageVersions()) {
-            $stack = Stack::getByName($this->arHandle, 'RECENT', $contentSource);
+            $stack = Stack::getByName($this->arHandle);
         } else {
-            $stack = Stack::getByName($this->arHandle, 'ACTIVE', $contentSource);
+            $stack = Stack::getByName($this->arHandle, 'ACTIVE');
         }
         return $stack;
     }
@@ -111,14 +90,10 @@ class GlobalArea extends Area
     public function getAreaBlocks()
     {
         $cp = new Permissions($this->c);
-        $contentSource = Stack::MULTILINGUAL_CONTENT_SOURCE_CURRENT;
-        if ($this->ignoreCurrentMultilingualLanguageSection) {
-            $contentSource = Stack::MULTILINGUAL_CONTENT_SOURCE_DEFAULT;
-        }
         if ($cp->canViewPageVersions()) {
-            $stack = Stack::getByName($this->arHandle, 'RECENT', $contentSource);
+            $stack = Stack::getByName($this->arHandle);
         } else {
-            $stack = Stack::getByName($this->arHandle, 'ACTIVE', $contentSource);
+            $stack = Stack::getByName($this->arHandle, 'ACTIVE');
         }
         $blocksTmp = array();
         if (is_object($stack)) {
@@ -137,9 +112,10 @@ class GlobalArea extends Area
         return $blocks;
     }
 
-    public function display($c = false, $fake = null)
+    public function display()
     {
-        parent::display($c, null);
+        $c = Page::getCurrentPage();
+        parent::display($c);
     }
 
     /**

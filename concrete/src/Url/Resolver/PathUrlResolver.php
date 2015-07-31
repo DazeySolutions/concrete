@@ -3,7 +3,6 @@ namespace Concrete\Core\Url\Resolver;
 
 use Concrete\Core\Url\Components\Path;
 use Concrete\Core\Url\UrlInterface;
-use League\Url\Url;
 
 class PathUrlResolver implements UrlResolverInterface
 {
@@ -40,27 +39,14 @@ class PathUrlResolver implements UrlResolverInterface
         $path_object = $this->basePath($url, $path, $args);
 
         $components = parse_url($path);
-
-        $reset = false;
-        // Were we passed a built URL? If so, just return it.
-        if ($string = array_get($components, 'scheme')) {
-            try {
-                $url = Url::createFromUrl($path);
-                $path_object = $url->getPath();
-                $reset = true;
-            } catch (\Exception $e) {}
+        if ($string = array_get($components, 'path')) {
+            $path_object->append($string);
         }
-
-        if (!$reset) {
-            if ($string = array_get($components, 'path')) {
-                $path_object->append($string);
-            }
-            if ($string = array_get($components, 'query')) {
-                $url = $url->setQuery($string);
-            }
-            if ($string = array_get($components, 'fragment')) {
-                $url = $url->setFragment($string);
-            }
+        if ($string = array_get($components, 'query')) {
+            $url = $url->setQuery($string);
+        }
+        if ($string = array_get($components, 'fragment')) {
+            $url = $url->setFragment($string);
         }
 
         foreach ($args as $segment) {
@@ -70,12 +56,8 @@ class PathUrlResolver implements UrlResolverInterface
             $path_object->append($segment);
         }
 
-        if (!$reset) {
-            $url_path = $url->getPath();
-            $url_path->append($path_object);
-        } else {
-            $url_path = $path_object;
-        }
+        $url_path = $url->getPath();
+        $url_path->append($path_object);
 
         return $url->setPath($url_path);
     }
@@ -84,8 +66,8 @@ class PathUrlResolver implements UrlResolverInterface
     {
         $path_object = new Path('');
 
-        $rewriting = \Config::get('concrete.seo.url_rewriting');
-        $rewrite_all = \Config::get('concrete.seo.url_rewriting_all');
+        $rewriting    = \Config::get('concrete.seo.url_rewriting');
+        $rewrite_all  = \Config::get('concrete.seo.url_rewriting_all');
         $in_dashboard = \Core::make('helper/concrete/dashboard')->inDashboard($path);
 
         // If rewriting is disabled, or all_rewriting is disabled and we're

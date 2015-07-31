@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 use \Concrete\Core\File\EditResponse as FileEditResponse;
 $u = new User();
@@ -9,30 +9,26 @@ if (!$fp->canAccessFileManager()) {
 	die(t("Unable to access the file manager."));
 }
 
-$token_validator = \Core::make('helper/validation/token');
-
 if ($_POST['task'] == 'delete_files') {
-    $fr = new FileEditResponse();
-    if ($token_validator->validate('files/delete')) {
-        $files = array();
-        if (is_array($_POST['fID'])) {
-            foreach ($_POST['fID'] as $fID) {
-                $f = File::getByID($fID);
-                $fp = new Permissions($f);
-                if ($fp->canDeleteFile()) {
-                    $files[] = $f;
-                    $f->delete();
-                } else {
-                    throw new Exception(t('Unable to delete one or more files.'));
-                }
-            }
-        }
+	$json['error'] = false;
 
-        $fr->setMessage(t2('%s file deleted successfully.', '%s files deleted successfully.', count($files)));
-    } else {
-        $fr->setError(new \Exception('Invalid Token'));
-    }
-    $fr->outputJSON();
+	$fr = new FileEditResponse();
+	$files = array();
+	if (is_array($_POST['fID'])) {
+		foreach($_POST['fID'] as $fID) {
+			$f = File::getByID($fID);
+			$fp = new Permissions($f);
+			if ($fp->canDeleteFile()) {
+				$files[] = $f;
+				$f->delete();
+			} else {
+				throw new Exception(t('Unable to delete one or more files.'));
+			}
+		}
+	}
+
+	$fr->setMessage(t2('%s file deleted successfully.', '%s files deleted successfully.', count($files)));
+	$fr->outputJSON();
 }
 
 $form = Loader::helper('form');
@@ -58,34 +54,33 @@ foreach($files as $f) {
 
 <div class="ccm-ui">
 <br/>
-<? if ($fcnt == 0) { ?>
-	<p><?=t("You do not have permission to delete any of the selected files."); ?><p>
-<? } else { ?>
+<?php if ($fcnt == 0) { ?>
+	<p><?php echo t("You do not have permission to delete any of the selected files."); ?><p>
+<?php } else { ?>
 
-	<div class="alert alert-warning"><?=t('Are you sure you want to delete the following files?')?></div>
+	<div class="alert alert-warning"><?php echo t('Are you sure you want to delete the following files?')?></div>
 
-	<form data-dialog-form="delete-file" method="post" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/delete">
-        <?= $token_validator->output('files/delete') ?>
-	<?=$form->hidden('task', 'delete_files')?>
+	<form data-dialog-form="delete-file" method="post" action="<?php echo REL_DIR_FILES_TOOLS_REQUIRED?>/files/delete">
+	<?php echo $form->hidden('task', 'delete_files')?>
 	<table border="0" cellspacing="0" cellpadding="0" width="100%" class="table table-striped">
 
-	<? foreach($files as $f) {
+	<?php foreach($files as $f) {
 		$fp = new Permissions($f);
 		if ($fp->canDeleteFile()) {
 			$fv = $f->getApprovedVersion();
 			if (is_object($fv)) { ?>
 
-			<?=$form->hidden('fID[]', $f->getFileID())?>
+			<?php echo $form->hidden('fID[]', $f->getFileID())?>
 
 			<tr>
-				<td><?=$fv->getType()?></td>
-				<td class="ccm-file-list-filename" width="100%"><div style="word-wrap: break-word; width: 150px"><?=h($fv->getTitle())?></div></td>
-				<td><?=$dh->formatDateTime($f->getDateAdded()->getTimestamp())?></td>
-				<td><?=$fv->getSize()?></td>
-				<td><?=$fv->getAuthorName()?></td>
+				<td><?php echo $fv->getType()?></td>
+				<td class="ccm-file-list-filename" width="100%"><div style="word-wrap: break-word; width: 150px"><?php echo h($fv->getTitle())?></div></td>
+				<td><?php echo $dh->formatDateTime($f->getDateAdded()->getTimestamp())?></td>
+				<td><?php echo $fv->getSize()?></td>
+				<td><?php echo $fv->getAuthorName()?></td>
 			</tr>
 
-			<? }
+			<?php }
 		}
 
 	} ?>
@@ -93,8 +88,8 @@ foreach($files as $f) {
 	</form>
 
 	<div class="dialog-buttons">
-	<button class="btn btn-default pull-left" data-dialog-action="cancel"><?=t('Cancel')?></button>
-	<button type="button" data-dialog-action="submit" class="btn btn-danger pull-right"><?=t('Delete')?></button>
+	<button class="btn btn-default pull-left" data-dialog-action="cancel"><?php echo t('Cancel')?></button>
+	<button type="button" data-dialog-action="submit" class="btn btn-danger pull-right"><?php echo t('Delete')?></button>
 	</div>
 
 </div>
@@ -109,7 +104,7 @@ foreach($files as $f) {
 	});
 	</script>
 
-	<?
+	<?php
 
 }
 

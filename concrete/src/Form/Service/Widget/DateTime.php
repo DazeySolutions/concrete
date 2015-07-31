@@ -160,15 +160,7 @@ class DateTime
                     altFormat: "yy-mm-dd",
                     altField: "#' . $id . '_dt",
                     changeYear: true,
-                    showAnim: \'fadeIn\',
-                    onClose: function(dateText, inst) {
-                        if(dateText == "") {
-                            var altField = $(inst.settings["altField"]);
-                            if(altField.length) {
-                                altField.val(dateText);
-                            }
-                        }
-                    }
+                    showAnim: \'fadeIn\'
                 }).datepicker("setDate" , ' . $defaultDateJs . '); })</script>';
         }
         // first we add a calendar input
@@ -240,15 +232,7 @@ EOS;
                     altFormat: "yy-mm-dd",
                     altField: "#' . $id . '",
                     changeYear: true,
-                    showAnim: \'fadeIn\',
-                    onClose: function(dateText, inst) {
-                        if(dateText == "") {
-                            var altField = $(inst.settings["altField"]);
-                            if(altField.length) {
-                                altField.val(dateText);
-                            }
-                        }
-                    }
+                    showAnim: \'fadeIn\'
                 }).datepicker( "setDate" , ' . $defaultDateJs . ' ); });</script>';
         }
 

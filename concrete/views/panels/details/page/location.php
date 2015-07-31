@@ -1,74 +1,74 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 <section class="ccm-ui">
-	<header><?=t('Location')?></header>
-	<form method="post" action="<?=$controller->action('submit')?>" data-dialog-form="location" data-panel-detail-form="location">
+	<header><?php echo t('Location')?></header>
+	<form method="post" action="<?php echo $controller->action('submit')?>" data-dialog-form="location" data-panel-detail-form="location">
 
-		<?=Loader::helper('concrete/ui/help')->display('panel', '/page/location')?>
-        <input type="hidden" name="cParentID" value="<?=$cParentID?>" />
+		<?php echo Loader::helper('concrete/ui/help')->display('panel', '/page/location')?>
+        <input type="hidden" name="cParentID" value="<?php echo $cParentID?>" />
 
-        <? if (!isset($sitemap) && $sitemap == false) { ?>
+        <?php if (!isset($sitemap) && $sitemap == false) { ?>
             <div style="min-height: 140px">
-                <? if ($c->isPageDraft()) { ?>
-                    <p class="lead"><?=t('Where will this page live on the site?')?></p>
-                <? } else { ?>
-                    <p class="lead"><?=t('Where does this page live on the site?')?></p>
-                <? } ?>
+                <?php if ($c->isPageDraft()) { ?>
+                    <p class="lead"><?php echo t('Where will this page live on the site?')?></p>
+                <?php } else { ?>
+                    <p class="lead"><?php echo t('Where does this page live on the site?')?></p>
+                <?php } ?>
 
                 <div id="ccm-panel-detail-location-display"></div>
 
-                <button class="btn btn-info"type="button" name="location"><?=t('Choose Location')?></button>
+                <button class="btn btn-info"type="button" name="location"><?php echo t('Choose Location')?></button>
 
             </div>
 		<hr/>
-        <? } ?>
+        <?php } ?>
 
-	<? if ($c->isGeneratedCollection() || $c->isPageDraft()) { ?>
+	<?php if ($c->isGeneratedCollection() || $c->isPageDraft()) { ?>
 
-		<p class="lead"><?=t('Current Canonical URL')?></p>
+		<p class="lead"><?php echo t('Current Canonical URL')?></p>
 		<div class="breadcrumb">
-			<? if ($c->isPageDraft()) { ?>
-				<?=t('None. Pages do not have canonical URLs until they are published.')?>
-			<? } else { ?>
+			<?php if ($c->isPageDraft()) { ?>
+				<?php echo t('None. Pages do not have canonical URLs until they are published.')?>
+			<?php } else { ?>
 				<?php echo Loader::helper('navigation')->getLinkToCollection($c, true)?>
-			<? } ?>
+			<?php } ?>
 		</div>
 
-	<? } else { ?>
+	<?php } else { ?>
 
-		<p class="lead"><?=t('URLs to this Page')?></p>
+		<p class="lead"><?php echo t('URLs to this Page')?></p>
 
 		<div>
 		<table class="table table-striped ccm-page-panel-detail-location-paths">
 			<thead>
 			<tr>
 				<th></th>
-				<th><?=t('Canonical')?></th>
-				<th style="width: 100%"><?=t('Path')?></th>
+				<th><?php echo t('Canonical')?></th>
+				<th style="width: 100%"><?php echo t('Path')?></th>
 				<th></th>
 			</tr>
 			</thead>
 			<tbody></tbody>
 		</table>
 
-		<button class="btn btn-info pull-right" type="button" data-action="add-url"><?=t('Add URL')?></button>
+		<button class="btn btn-info pull-right" type="button" data-action="add-url"><?php echo t('Add URL')?></button>
 
 		<br/><br/>
-		<span class="help-block"><?=t('Note: Additional page paths are not versioned. They will be available immediately.')?></span>
+		<span class="help-block"><?php echo t('Note: Additional page paths are not versioned. They will be available immediately.')?></span>
 
 		</div>
 
-	<? } ?>
+	<?php } ?>
 
-	<? if (isset($sitemap) && $sitemap) { ?>
+	<?php if (isset($sitemap) && $sitemap) { ?>
 		<input type="hidden" name="sitemap" value="1" />
-	<? } ?>
+	<?php } ?>
 
 	</form>
 	<div class="ccm-panel-detail-form-actions dialog-buttons">
-		<button class="pull-left btn btn-default" type="button" data-dialog-action="cancel" data-panel-detail-action="cancel"><?=t('Cancel')?></button>
-		<button class="pull-right btn btn-success" type="button" data-dialog-action="submit" data-panel-detail-action="submit"><?=t('Save Changes')?></button>
+		<button class="pull-left btn btn-default" type="button" data-dialog-action="cancel" data-panel-detail-action="cancel"><?php echo t('Cancel')?></button>
+		<button class="pull-right btn btn-success" type="button" data-dialog-action="submit" data-panel-detail-action="submit"><?php echo t('Save Changes')?></button>
 	</div>
 
 </section>
@@ -83,11 +83,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	<% if (parentID && parentID > 0) { %>
 	<ol class="breadcrumb">
 	  <li><a href="<%=parentLink%>" target="_blank"><%=parentName%></a></li>
-	  <li class="active"><?=$c->getCollectionName()?></li>
+	  <li class="active"><?php echo $c->getCollectionName()?></li>
 	</ol>
 	<% } else { %>
 		<div class="breadcrumb">
-		<?=t('A location has not yet been chosen.')?>
+		<?php echo t('A location has not yet been chosen.')?>
 		</div>
 	<% } %>
 </script>
@@ -95,7 +95,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 <script type="text/template" class="pagePath">
 	<tr>
 		<td><% if (isAutoGenerated) { %>
-			<i class="fa fa-link launch-tooltip" title="<?=t('This page path is automatically generated from URL slugs. You cannot change this path.')?>"></i>
+			<i class="fa fa-link launch-tooltip" title="<?php echo t('This page path is automatically generated from URL slugs. You cannot change this path.')?>"></i>
 		<% } else { %>
 			<i class="fa fa-external-link"></i>
 		<% } %></td>
@@ -122,20 +122,20 @@ $(function() {
 			width: '90%',
 			height: '70%',
 			modal: true,
-			title: '<?=t("Choose New Page Parent")?>',
-			href: '<?=REL_DIR_FILES_TOOLS_REQUIRED?>/sitemap_search_selector?cID=<?=$c->getCollectionID()?>'
+			title: '<?php echo t("Choose New Page Parent")?>',
+			href: '<?php echo REL_DIR_FILES_TOOLS_REQUIRED?>/sitemap_search_selector?cID=<?php echo $c->getCollectionID()?>'
 		});
 	});
 
 	$('#ccm-panel-detail-location-display').html(renderBreadcrumb({
-		parentLink: '<?=Loader::helper('navigation')->getLinkToCollection($parent);?>',
-		parentName: '<?=$parent->getCollectionName()?>',
-		parentID: '<?=$cParentID?>'
+		parentLink: '<?php echo Loader::helper('navigation')->getLinkToCollection($parent);?>',
+		parentName: '<?php echo $parent->getCollectionName()?>',
+		parentID: '<?php echo $cParentID?>'
 	}));
 
 	ConcreteEvent.subscribe('SitemapSelectPage', function(e, data) {
 		$('#ccm-panel-detail-location-display').html(renderBreadcrumb({
-			parentLink: '<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=' + data.cID,
+			parentLink: '<?php echo DIR_REL?>/<?php echo DISPATCHER_FILENAME?>?cID=' + data.cID,
 			parentName: data.title,
 			parentID: data.cID
 		}));
@@ -163,7 +163,7 @@ $(function() {
 		);
 	});
 
-	<? /*
+	<?php /*
     <? foreach($paths as $i => $path) { ?>
 	$('table.ccm-page-panel-detail-location-paths tbody').append(
         renderPagePath({
@@ -176,29 +176,29 @@ $(function() {
     <? } ?>
 	*/?>
 
-	<? // first, we render the URL as it would be displayed auto-generated ?>
+	<?php // first, we render the URL as it would be displayed auto-generated ?>
 
 	$('table.ccm-page-panel-detail-location-paths tbody').append(
 		renderPagePath({
-			isAutoGenerated: <?=intval($autoGeneratedPath->isPagePathAutoGenerated())?>,
-			isCanonical: <?=intval($autoGeneratedPath->isPagePathCanonical())?>,
-			pagePath: '<?=$autoGeneratedPath->getPagePath()?>',
+			isAutoGenerated: <?php echo intval($autoGeneratedPath->isPagePathAutoGenerated())?>,
+			isCanonical: <?php echo intval($autoGeneratedPath->isPagePathCanonical())?>,
+			pagePath: '<?php echo $autoGeneratedPath->getPagePath()?>',
 			row: 0
 		})
 	);
 
-	<? // now we loop through all the rest of the page paths ?>
+	<?php // now we loop through all the rest of the page paths ?>
 
-    <? foreach($paths as $i => $path) { ?>
+    <?php foreach($paths as $i => $path) { ?>
 	$('table.ccm-page-panel-detail-location-paths tbody').append(
         renderPagePath({
-			isAutoGenerated: <?=intval($path->isPagePathAutoGenerated())?>,
-			isCanonical: <?=intval($path->isPagePathCanonical())?>,
-			pagePath: '<?=$path->getPagePath()?>',
-			row: <?=$i + 1?>
+			isAutoGenerated: <?php echo intval($path->isPagePathAutoGenerated())?>,
+			isCanonical: <?php echo intval($path->isPagePathCanonical())?>,
+			pagePath: '<?php echo $path->getPagePath()?>',
+			row: <?php echo $i + 1?>
 		})
 	);
-    <? } ?>
+    <?php } ?>
 
 
 });

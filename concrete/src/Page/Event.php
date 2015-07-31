@@ -1,49 +1,38 @@
 <?php
 namespace Concrete\Core\Page;
-
 use \Symfony\Component\EventDispatcher\GenericEvent;
 use User;
-use Symfony\Component\HttpFoundation\Request;
-use Concrete\Core\Http\RequestEventInterface;
 
-class Event extends GenericEvent implements RequestEventInterface
-{
+class Event extends GenericEvent {
 
-    protected $page;
-    protected $user;
-    protected $request;
+	protected $page;
+	protected $user;
+	protected $request;
 
-    public function __construct(Page $c)
-    {
-        $this->page = $c;
-    }
+	public function __construct(Page $c) {
+		$this->page = $c;
+	}
 
-    public function setUser(User $u)
-    {
-        $this->user = $u;
-    }
+	public function setUser(User $u) {
+		$this->user = $u;
+	}
 
-    /**
-     * @param Request $request
-     */
-    public function setRequest(Request $request)
-    {
-        $this->request = $request;
-    }
+	public function setRequest($request)
+	{
+		$this->request = $request;
+	}
 
-    /** @return \Symfony\Component\HttpFoundation\Request */
-    public function getRequest()
-    {
-        return $this->request;
-    }
+	/** @return \Symfony\Component\HttpFoundation\Request */
+	public function getRequest()
+	{
+		return $this->request;
+	}
 
-    public function getPageObject()
-    {
-        return $this->page;
-    }
+	public function getPageObject() {
+		return $this->page;
+	}
 
-    public function getUserObject()
-    {
-        return $this->user;
-    }
+	public function getUserObject() {
+		return $this->user;
+	}
 }

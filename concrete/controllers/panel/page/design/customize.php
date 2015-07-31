@@ -1,6 +1,5 @@
-<?
+<?php
 namespace Concrete\Controller\Panel\Page\Design;
-
 use \Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
 use Concrete\Core\Page\PageList;
 use Permissions;
@@ -15,26 +14,23 @@ use User;
 use Response;
 use Core;
 
-class Customize extends BackendInterfacePageController
-{
+class Customize extends BackendInterfacePageController {
 
     protected $viewPath = '/panels/page/design/customize';
     protected $controllerActionPath = '/ccm/system/panels/page/design/customize';
     protected $helpers = array('form');
 
-    public function canAccess()
-    {
+    public function canAccess() {
         return $this->permissions->canEditPageTheme();
     }
 
-    public function view($pThemeID)
-    {
+    public function view($pThemeID) {
         $this->requireAsset('core/style-customizer');
         $pt = PageTheme::getByID($pThemeID);
         if (is_object($pt) && $pt->isThemeCustomizable()) {
 
             $presets = $pt->getThemeCustomizableStylePresets();
-            foreach ($presets as $preset) {
+            foreach($presets as $preset) {
                 if ($preset->isDefaultPreset()) {
                     $defaultPreset = $preset;
                 }
@@ -70,7 +66,7 @@ class Customize extends BackendInterfacePageController
 
             // finally, we sort the presets so that the selected
             // preset is at the top
-            usort($presets, function ($a, $b) use ($selectedPreset) {
+            usort($presets, function($a, $b) use ($selectedPreset) {
                 if (!$selectedPreset) {
                     return -1;
                 }
@@ -100,23 +96,21 @@ class Customize extends BackendInterfacePageController
         }
     }
 
-    protected function getValueListFromRequest($pThemeID)
-    {
+    protected function getValueListFromRequest($pThemeID) {
         $pt = PageTheme::getByID($pThemeID);
         $styles = $pt->getThemeCustomizableStyleList();
         $vl = \Concrete\Core\StyleCustomizer\Style\ValueList::loadFromRequest($this->request->request, $styles);
         return $vl;
     }
 
-    public function preview($pThemeID)
-    {
+    public function preview($pThemeID) {
         $vl = $this->getValueListFromRequest($pThemeID);
         $pt = PageTheme::getByID($pThemeID);
         $pt->enablePreviewRequest();
         $sheets = $pt->getThemeCustomizableStyleSheets();
         // for each customizable stylesheet in the theme, we take the value list
         // and send its variables through the LESS parser.
-        foreach ($sheets as $sheet) {
+        foreach($sheets as $sheet) {
             $sheet->setValueList($vl);
             // we save each sheet to the preview location.
             $sheet->output();
@@ -135,8 +129,7 @@ class Customize extends BackendInterfacePageController
         return $response;
     }
 
-    public function apply_to_site($pThemeID)
-    {
+    public function apply_to_site($pThemeID) {
         $pk = PermissionKey::getByHandle('customize_themes');
         if ($this->validateAction() && $pk->can()) {
             $vl = $this->getValueListFromRequest($pThemeID);
@@ -155,7 +148,7 @@ class Customize extends BackendInterfacePageController
             $pl = new PageList();
             $pl->filterByPagesWithCustomStyles();
             $results = $pl->getResults();
-            foreach ($results as $csc) {
+            foreach($results as $csc) {
                 $cscv = $csc->getVersionToModify();
                 $cscv->resetCustomThemeStyles();
                 $vo = $csc->getVersionObject();
@@ -175,8 +168,7 @@ class Customize extends BackendInterfacePageController
     }
 
 
-    public function apply_to_page($pThemeID)
-    {
+    public function apply_to_page($pThemeID) {
         if ($this->validateAction()) {
             $vl = $this->getValueListFromRequest($pThemeID);
             $pt = PageTheme::getByID($pThemeID);
@@ -200,8 +192,7 @@ class Customize extends BackendInterfacePageController
         }
     }
 
-    public function reset_page_customizations()
-    {
+    public function reset_page_customizations() {
         if ($this->validateAction()) {
             $nvc = $this->page->getVersionToModify();
             $nvc->resetCustomThemeStyles();
@@ -212,8 +203,7 @@ class Customize extends BackendInterfacePageController
         }
     }
 
-    public function reset_site_customizations($pThemeID)
-    {
+    public function reset_site_customizations($pThemeID) {
         if ($this->validateAction()) {
             Page::resetAllCustomStyles();
 

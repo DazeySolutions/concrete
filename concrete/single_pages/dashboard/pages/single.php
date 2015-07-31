@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 $ih = Loader::helper('concrete/ui');
 
@@ -16,7 +16,7 @@ echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Sing
                 <div class="input-group">
                     <div class="input-group-addon"><?php echo $base?>/</div>
                     <input type="text" style="width: 200px" class="form-control" name="pageURL" value="<?php echo h($this->post('pageURL'))?>" />
-                    &nbsp; <button class="btn btn-default" type="submit"><?=t('Add')?></button>
+                    &nbsp; <button class="btn btn-default" type="submit"><?php echo t('Add')?></button>
                 </div>
             </div>
 		</form>
@@ -51,13 +51,13 @@ echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Sing
 						$packageName = t('None');
 					} ?>
 					<tr>
-						<td style="width: 30%"><a href="<?=URL::to($p)?>"><?php echo $p->getCollectionName()?></a></td>
+						<td style="width: 30%"><a href="<?php echo URL::to($p)?>"><?php echo $p->getCollectionName()?></a></td>
 						<td style="width: 40%"><?php echo $p->getCollectionPath()?></td>
 						<td style="width: 30%"><?php print $packageName; ?></td>
 						<td style="width: 1">
 							<?php if($cp->canAdmin()) { ?>
-                                <a href="<?=$view->action('refresh', $p->getCollectionID(), $this->controller->token->generate('refresh'))?>" title="<?=t('Refreshes the page, rebuilding its permissions and its name.')?>" class="icon-link launch-tooltip"><i class="fa fa-refresh"></i></a>
-                            <? } ?>
+                                <a href="<?php echo $view->action('refresh', $p->getCollectionID(), $this->controller->token->generate('refresh'))?>" title="<?php echo t('Refreshes the page, rebuilding its permissions and its name.')?>" class="icon-link launch-tooltip"><i class="fa fa-refresh"></i></a>
+                            <?php } ?>
 						</td>
 					</tr>
 				<?php }

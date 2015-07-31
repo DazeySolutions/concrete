@@ -8,8 +8,6 @@ abstract class CustomStyle
         return $this->set;
     }
 
-    abstract public function getStyleWrapper($css);
-
     abstract public function getCSS();
     abstract public function getContainerClass();
 

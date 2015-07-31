@@ -74,7 +74,6 @@ class Package extends Object
     const E_PACKAGE_INSTALL = 7;
     const E_PACKAGE_MIGRATE_BACKUP = 8;
     const E_PACKAGE_INVALID_APP_VERSION = 20;
-    const E_PACKAGE_THEME_ACTIVE = 21;
     protected $DIR_PACKAGES_CORE = DIR_PACKAGES_CORE;
     protected $DIR_PACKAGES = DIR_PACKAGES;
     protected $REL_DIR_PACKAGES_CORE = REL_DIR_PACKAGES_CORE;
@@ -631,28 +630,6 @@ class Package extends Object
     }
 
     /**
-     * @return bool|int[] true on success, array of error codes on failure
-     */
-    public function testForUninstall()
-    {
-        $errors = array();
-        $items = $this->getPackageItems();
-        /** @var PageTheme[] $themes */
-        $themes = array_get($items, 'page_themes', array());
-
-        // Step 1, check for active themes
-        $active_theme = \PageTheme::getSiteTheme();
-        foreach ($themes as $theme) {
-            if ($active_theme->getThemeID() == $theme->getThemeID()) {
-                $errors[] = self::E_PACKAGE_THEME_ACTIVE;
-                break;
-            }
-        }
-
-        return count($errors) ? $errors : true;
-    }
-
-    /**
      * Uninstalls the package. Removes any blocks, themes, or pages associated with the package.
      */
     public function uninstall()
@@ -924,8 +901,7 @@ class Package extends Object
         $errorText[Package::E_PACKAGE_INSTALL] = t('An error occurred while trying to install the package.');
         $errorText[Package::E_PACKAGE_MIGRATE_BACKUP] = t(
             'Unable to backup old package directory to %s',
-            \Config::get('concrete.misc.package_backup_directory')
-        );
+            DIR_FILES_TRASH);
         $errorText[Package::E_PACKAGE_INVALID_APP_VERSION] = t(
             'This package isn\'t currently available for this version of concrete5. Please contact the maintainer of this package for assistance.');
 

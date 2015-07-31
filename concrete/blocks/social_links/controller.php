@@ -1,8 +1,7 @@
 <?php
 
 namespace Concrete\Block\SocialLinks;
-
-use Concrete\Core\Block\BlockController;
+use \Concrete\Core\Block\BlockController;
 use Concrete\Core\Sharing\SocialNetwork\Link;
 use Concrete\Core\Sharing\SocialNetwork\Service;
 use Database;
@@ -12,6 +11,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class Controller extends BlockController
 {
+
     public $helpers = array('form');
 
     protected $btInterfaceWidth = 400;
@@ -37,7 +37,7 @@ class Controller extends BlockController
 
         // first we populate the links list with the selected ones in the proper order.
         $final = $selected = $this->getSelectedLinks();
-        foreach ($all as $link) {
+        foreach($all as $link) {
             if (!in_array($link, $selected)) {
                 $final[] = $link;
             }
@@ -59,49 +59,48 @@ class Controller extends BlockController
         $slIDs = $db->GetCol('select slID from btSocialLinks where bID = ? order by displayOrder asc',
             array($this->bID)
         );
-        foreach ($slIDs as $slID) {
+        foreach($slIDs as $slID) {
             $link = Link::getByID($slID);
             if (is_object($link)) {
                 $links[] = $link;
             }
         }
-
         return $links;
     }
 
     public function export(\SimpleXMLElement $blockNode)
     {
-        foreach ($this->getSelectedLinks() as $link) {
+        foreach($this->getSelectedLinks() as $link) {
             $linkNode = $blockNode->addChild('link');
             $linkNode->addAttribute('service', $link->getServiceObject()->getHandle());
         }
     }
 
-    public function getImportData($blockNode, $page)
+    public function getImportData($blockNode)
     {
+
         $args = array();
-        foreach ($blockNode->link as $link) {
+        foreach($blockNode->link as $link) {
             $link = Link::getByServiceHandle((string) $link['service']);
             $args['slID'][] = $link->getID();
         }
-
         return $args;
     }
 
-    public function validate($args)
+    public function validate()
     {
         $e = Core::make('helper/validation/error');
-        if (!isset($args['slID']) || empty($args['slID'])) {
+        $slIDs = $this->post('slID');
+        if (count($slIDs) == 0) {
             $e->add(t('You must choose at least one link.'));
         }
-
         return $e;
     }
 
     public function duplicate($newBlockID)
     {
         $db = Database::get();
-        foreach ($this->getSelectedLinks() as $link) {
+        foreach($this->getSelectedLinks() as $link) {
             $db->insert('btSocialLinks', array('bID' => $newBlockID, 'slID' => $link->getID(), 'displayOrder' => $this->displayOrder));
         }
     }
@@ -114,12 +113,12 @@ class Controller extends BlockController
 
         $statement = $db->prepare('insert into btSocialLinks (bID, slID, displayOrder) values (?, ?, ?)');
         $displayOrder = 0;
-        foreach ($slIDs as $linkID) {
+        foreach($slIDs as $linkID) {
             $statement->bindValue(1, $this->bID);
             $statement->bindValue(2, $linkID);
             $statement->bindValue(3, $displayOrder);
             $statement->execute();
-            ++$displayOrder;
+            $displayOrder++;
         }
     }
 
@@ -139,4 +138,8 @@ class Controller extends BlockController
     {
         $this->requireAsset('css', 'font-awesome');
     }
+
+
 }
+
+?>

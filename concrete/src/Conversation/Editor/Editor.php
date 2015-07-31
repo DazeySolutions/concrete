@@ -1,20 +1,20 @@
 <?php
-
 namespace Concrete\Core\Conversation\Editor;
 
 use Config;
 use Conversation;
 use Core;
-use Database;
 use Environment;
+use Loader;
 use Concrete\Core\Conversation\Message\Message;
-use Concrete\Core\Foundation\Object;
+use \Concrete\Core\Foundation\Object;
 use Package;
-use Concrete\Core\Package\PackageList;
+use \Concrete\Core\Package\PackageList;
 use View;
 
 abstract class Editor extends Object
 {
+
     /** @var string */
     protected $cnvEditorHandle;
     /** @var string */
@@ -34,6 +34,7 @@ abstract class Editor extends Object
 
     /** @return \Concrete\Core\Asset\AssetPointer[] */
     abstract public function getConversationEditorAssetPointers();
+
 
     public function setConversationEditorInputName($input)
     {
@@ -84,7 +85,6 @@ abstract class Editor extends Object
             return '';
         }
         $cnv = $this->cnvMessage->getConversationObject();
-
         return $this->cnvMessage->getConversationMessageBody();
     }
 
@@ -114,8 +114,7 @@ abstract class Editor extends Object
     }
 
     /**
-     * Looks up and returns the Package.
-     *
+     * Looks up and returns the Packag
      * @return string
      */
     public function getPackageHandle()
@@ -124,8 +123,7 @@ abstract class Editor extends Object
     }
 
     /**
-     * Looks up and returns a Package object for the current Editor's Package ID.
-     *
+     * Looks up and returns a Package object for the current Editor's Package ID
      * @return Package
      */
     public function getPackageObject()
@@ -138,63 +136,54 @@ abstract class Editor extends Object
      */
     public static function getActive()
     {
-        $db = Database::connection();
+        $db = Loader::db();
         $cnvEditorID = $db->fetchColumn('select cnvEditorID from ConversationEditors where cnvEditorIsActive = 1');
         if ($cnvEditorID) {
             return static::getByID($cnvEditorID);
         }
-
         return null;
     }
 
     /**
-     * Returns the appropriate conversation editor object for the given cnvEditorID.
-     *
+     * Returns the appropriate conversation editor object for the given cnvEditorID
      * @param int $cnvEditorID
-     *
      * @return Editor|null
      */
     public static function getByID($cnvEditorID)
     {
-        $db = Database::connection();
+        $db = Loader::db();
         $r = $db->fetchAssoc(
             'select *
              from ConversationEditors
              where cnvEditorID = ?',
             array($cnvEditorID)
         );
-
-        return static::createFromRecord($r);
+        return self::createFromRecord($r);
     }
 
     /**
-     * Returns the appropriate conversation editor object for the given cnvEditorHandle.
-     *
+     * Returns the appropriate conversation editor object for the given cnvEditorHandle
      * @param $cnvEditorHandle
-     *
      * @return Editor|null
      */
     public static function getByHandle($cnvEditorHandle)
     {
-        $db = Database::connection();
+        $db = Loader::db();
         $r = $db->fetchAssoc(
             'select *
              from ConversationEditors
              where cnvEditorHandle = ?',
             array($cnvEditorHandle)
         );
-
-        return static::createFromRecord($r);
+        return self::createFromRecord($r);
     }
 
     /**
-     * This function is used to instantiate a Conversation Editor object from an associative array.
-     *
+     * This function is used to instantiate a Conversation Editor object from an associative array
      * @param array $record an associative array of field value pairs for the ConversationEditor record
-     *
      * @return Editor|null
      */
-    protected static function createFromRecord($record)
+    protected function createFromRecord($record)
     {
         if (is_array($record) && $record['cnvEditorHandle']) {
             /** @var \Concrete\Core\Utility\Service\Text $textHelper */
@@ -205,15 +194,13 @@ abstract class Editor extends Object
             /** @var Editor $sc Really this could be any kind of editor but this should help code completion a bit */
             $sc = Core::make($class);
             $sc->setPropertiesFromArray($record);
-
             return $sc;
         }
-
         return null;
     }
 
     /**
-     * outputs an HTML block containing the add message form for the current Conversation Editor.
+     * outputs an HTML block containing the add message form for the current Conversation Editor
      */
     public function outputConversationEditorAddMessageForm()
     {
@@ -224,11 +211,11 @@ abstract class Editor extends Object
             $this->getPackageHandle()
         );
         $editor = $this; //$editor used in the element
-        include $path;
+        include($path);
     }
 
     /**
-     * Outputs an HTML block containing the message reply form for the current Conversation Editor.
+     * outputs an HTML block containing the message reply form for the current Conversation Editor
      */
     public function outputConversationEditorReplyMessageForm()
     {
@@ -239,16 +226,14 @@ abstract class Editor extends Object
             $this->getPackageHandle()
         );
         $editor = $this; //$editor used in the element
-        include $path;
+        include($path);
     }
 
     /**
-     * Returns a formatted conversation message body string, based on configuration options supplied.
-     *
+     * Returns a formatted conversation message body string, based on configuration options supplied
      * @param \Concrete\Core\Conversation\Conversation $cnv
      * @param string $cnvMessageBody
      * @param array $config
-     *
      * @return string
      */
     public function formatConversationMessageBody($cnv, $cnvMessageBody, $config = array())
@@ -257,8 +242,9 @@ abstract class Editor extends Object
         $htmlHelper = Core::make('helper/html');
         $cnvMessageBody = $htmlHelper->noFollowHref($cnvMessageBody);
         if (isset($config['htmlawed'])) {
+
             $default = array('safe' => 1, 'elements' => 'p, br, strong, em, strike, a');
-            $conf = array_merge($default, (array) $config['htmlawed']);
+            $conf = array_merge($default, (array)$config['htmlawed']);
             $lawed = htmLawed($cnvMessageBody, $conf);
         } else {
             $lawed = $cnvMessageBody;
@@ -275,20 +261,16 @@ abstract class Editor extends Object
                         $user->getUserID()
                     ) . "'>@" . $user->getUserName() . "</a>";
             }
-
             return str_ireplace($needle, $haystack, $lawed);
         }
-
         return $lawed;
     }
 
     /**
-     * Creates a database record for the Conversation Editor, then attempts to return the object.
-     *
+     * Creates a database record for the Conversation Editor, then attempts to return the object
      * @param string $cnvEditorHandle
      * @param string $cnvEditorName
      * @param bool|Package $pkg
-     *
      * @return Editor|null
      */
     public static function add($cnvEditorHandle, $cnvEditorName, $pkg = false)
@@ -297,57 +279,54 @@ abstract class Editor extends Object
         if (is_object($pkg)) {
             $pkgID = $pkg->getPackageID();
         }
-        $db = Database::connection();
+        $db = Loader::db();
         $db->insert(
             'ConversationEditors',
             array(
                 'cnvEditorHandle' => $cnvEditorHandle,
                 'cnvEditorName' => $cnvEditorName,
-                'pkgID' => $pkgID,
+                'pkgID' => $pkgID
             )
         );
-
         return static::getByHandle($cnvEditorHandle);
     }
 
     /**
-     * Removes the current editor object's record from the database.
+     * Removes the current editor object's record from the database
      */
     public function delete()
     {
-        $db = Database::connection();
+        $db = Loader::db();
         $db->delete('ConversationEditors', array('cnvEditorID' => $this->cnvEditorID));
     }
 
     /**
-     * Deactivates all other Conversation Editors, and activates the current one.
+     * Deactivates all other Conversation Editors, and activates the current one
      */
     public function activate()
     {
-        $db = Database::connection();
+        $db = Loader::db();
         static::deactivateAll();
         $db->update('ConversationEditors', array('cnvEditorIsActive' => 1), array('cnvEditorID' => $this->cnvEditorID));
     }
 
     /**
-     * Function used to deactivate.
+     * Function used to deactivate
      */
     protected function deactivateAll()
     {
-        $db = Database::connection();
+        $db = Loader::db();
         $db->update('ConversationEditors', array('cnvEditorIsActive' => 0), array('cnvEditorIsActive' => 1));
     }
 
     /**
-     * Returns an array of all Editor Objects.
-     *
+     * Returns an array of all Editor Objects
      * @param null $pkgID An optional filter for Package ID
-     *
      * @return Editor[]
      */
     public static function getList($pkgID = null)
     {
-        $db = Database::connection();
+        $db = Loader::db();
         $queryBuilder = $db->createQueryBuilder()
             ->select('e.*')
             ->from('ConversationEditors', 'e')
@@ -362,15 +341,12 @@ abstract class Editor extends Object
             $cnvEditor = static::createFromRecord($editorRecord);
             $editors[] = $cnvEditor;
         }
-
         return $editors;
     }
 
     /**
-     * Returns an array of all Editor objects for the given package object.
-     *
+     * Returns an array of all Editor objects for the given package object
      * @param Package $pkg
-     *
      * @return Editor[]
      */
     public static function getListByPackage($pkg)
@@ -379,13 +355,12 @@ abstract class Editor extends Object
     }
 
     /**
-     * Adds a ConversationEditors node and all Editor records to the provided SimleXMLElement object provided.
-     *
+     * Adds a ConversationEditors node and all Editor records to the provided SimleXMLElement object provided
      * @param \SimpleXMLElement $xml
      */
     public static function exportList($xml)
     {
-        $list = static::getList();
+        $list = self::getList();
         $nxml = $xml->addChild('conversationeditors');
 
         foreach ($list as $sc) {
@@ -398,8 +373,7 @@ abstract class Editor extends Object
     }
 
     /**
-     * Returns whether or not the current Conversation Editor has an options form.
-     *
+     * Returns whether or not the current Conversation Editor has an options form
      * @return bool
      */
     public function hasOptionsForm()
@@ -410,7 +384,7 @@ abstract class Editor extends Object
             $this->cnvEditorHandle . '/' . FILENAME_CONVERSATION_EDITOR_OPTIONS,
             $this->getPackageHandle()
         );
-
         return $rec->exists();
     }
+
 }

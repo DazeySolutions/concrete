@@ -21,13 +21,10 @@ class Controller extends AuthenticationTypeController
 
     public function deauthenticate(User $u)
     {
-        $cookie = array_get($_COOKIE, 'ccmAuthUserHash', '');
-        if ($cookie) {
-            list($uID, $authType, $hash) = explode(':', $cookie);
-            if ($authType == 'concrete') {
-                $db = Loader::db();
-                $db->execute('DELETE FROM authTypeConcreteCookieMap WHERE uID=? AND token=?', array($uID, $hash));
-            }
+        list($uID, $authType, $hash) = explode(':', $_COOKIE['ccmAuthUserHash']);
+        if ($authType == 'concrete') {
+            $db = Loader::db();
+            $db->execute('DELETE FROM authTypeConcreteCookieMap WHERE uID=? AND token=?', array($uID, $hash));
         }
     }
 
@@ -82,9 +79,7 @@ class Controller extends AuthenticationTypeController
     private function genString($a = 16)
     {
         if (function_exists('mcrypt_create_iv')) {
-            // Use /dev/urandom if available, otherwise fall back to PHP's rand.
-            // http://php.net/manual/en/function.mcrypt-create-iv.php#117047
-            return bin2hex(mcrypt_create_iv($a, MCRYPT_DEV_URANDOM|MCRYPT_RAND));
+            return bin2hex(mcrypt_create_iv($a, MCRYPT_DEV_URANDOM));
         } elseif (function_exists('openssl_random_pseudo_bytes')) {
             return bin2hex(openssl_random_pseudo_bytes($a));
         }
@@ -148,21 +143,13 @@ class Controller extends AuthenticationTypeController
 
                 $mh->addParameter('changePassURL', $changePassURL);
 
-                $fromEmail = (string) Config::get('concrete.email.forgot_password.address');
-                if (!strpos($fromEmail, '@')) {
+                if (defined('EMAIL_ADDRESS_FORGOT_PASSWORD')) {
+                    $mh->from(EMAIL_ADDRESS_FORGOT_PASSWORD, t('Forgot Password'));
+                } else {
                     $adminUser = UserInfo::getByID(USER_SUPER_ID);
                     if (is_object($adminUser)) {
-                        $fromEmail = $adminUser->getUserEmail();
-                    } else {
-                        $fromEmail = '';
+                        $mh->from($adminUser->getUserEmail(), t('Forgot Password'));
                     }
-                }
-                if ($fromEmail) {
-                    $fromName = (string) Config::get('concrete.email.forgot_password.name');
-                    if ($fromName === '') {
-                        $fromName = t('Forgot Password');
-                    }
-                    $mh->from($fromEmail, $fromName);
                 }
 
                 $mh->addParameter('siteName', Config::get('concrete.site'));
@@ -249,7 +236,7 @@ class Controller extends AuthenticationTypeController
     {
         $post = $this->post();
 
-        if (empty($post['uName']) || empty($post['uPassword'])) {
+        if (!isset($post['uName']) || !isset($post['uPassword'])) {
             throw new Exception(t('Please provide both username and password.'));
         }
         $uName = $post['uName'];

@@ -57,8 +57,6 @@ class Picture extends Element
 
     public function sources($sources)
     {
-        $this->nest("<!--[if IE 9]><video style='display: none;'><![endif]-->");
-
         foreach($sources as $source) {
             $path = $source['src'];
             $width = $source['width'];
@@ -69,8 +67,6 @@ class Picture extends Element
             }
             $this->setChild($source);
         }
-
-        $this->nest("<!--[if IE 9]></video><![endif]-->");
 
         return $this;
     }

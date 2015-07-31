@@ -94,7 +94,7 @@ class DispatcherRouteCallback extends RouteCallback
         }
         if (!$c->cPathFetchIsCanonical) {
             // Handle redirect URL (additional page paths)
-            return Redirect::page($c, 301);
+            return Redirect::page($c, 301)->send();
         }
 
         // maintenance mode
@@ -109,7 +109,7 @@ class DispatcherRouteCallback extends RouteCallback
         }
 
         if ($c->getCollectionPointerExternalLink() != '') {
-            return Redirect::url($c->getCollectionPointerExternalLink(), 301);
+            return Redirect::url($c->getCollectionPointerExternalLink(), 301)->send();
         }
 
         $cp = new Permissions($c);
@@ -154,7 +154,7 @@ class DispatcherRouteCallback extends RouteCallback
 
         // Now we check to see if we're on the home page, and if it multilingual is enabled,
         // and if so, whether we should redirect to the default language page.
-        if (\Core::make('multilingual/detector')->isEnabled()) {
+        if (Config::get('concrete.multilingual.enabled')) {
             $dl = Core::make('multilingual/detector');
             if ($c->getCollectionID() == HOME_CID && Config::get('concrete.multilingual.redirect_home_to_default_locale')) {
                 // Let's retrieve the default language
@@ -191,10 +191,7 @@ class DispatcherRouteCallback extends RouteCallback
         }
         $requestTask = $controller->getRequestAction();
         $requestParameters = $controller->getRequestActionParameters();
-        $response = $controller->runAction($requestTask, $requestParameters);
-        if ($response instanceof \Symfony\Component\HttpFoundation\Response) {
-            return $response;
-        }
+        $controller->runAction($requestTask, $requestParameters);
 
         $c->setController($controller);
         $view = $controller->getViewObject();

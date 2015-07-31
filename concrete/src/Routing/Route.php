@@ -9,9 +9,6 @@ class Route extends \Symfony\Component\Routing\Route {
 	}
 
 	public function getPath() {
-        if ($path = parent::getPath()) {
-            return $path;
-        }
 		$defaults = $this->getDefaults();
 		return $defaults['path'];
 	}

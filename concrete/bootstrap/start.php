@@ -66,7 +66,6 @@ require DIR_BASE_CORE . '/bootstrap/paths.php';
  * Add install environment detection
  * ----------------------------------------------------------------------------
  */
-$db_config = array();
 if (file_exists(DIR_APPLICATION . '/config/database.php')) {
     $db_config = include DIR_APPLICATION . '/config/database.php';
 }
@@ -93,13 +92,6 @@ if (!$cms->bound('config')) {
 }
 
 $config = $cms->make('config');
-
-/*
- * ----------------------------------------------------------------------------
- * Finalize paths.
- * ----------------------------------------------------------------------------
- */
-require DIR_BASE_CORE . '/bootstrap/paths_configured.php';
 
 /**
  * ----------------------------------------------------------------------------
@@ -156,12 +148,7 @@ $list->registerProviders($config->get('app.providers'));
  */
 define('APP_VERSION', $config->get('concrete.version'));
 define('APP_CHARSET', $config->get('concrete.charset'));
-try {
-    define('BASE_URL', \Core::getApplicationURL());
-} catch (\Exception $x) {
-    echo $x->getMessage();
-    die(1);
-}
+define('BASE_URL', \Core::getApplicationURL());
 define('DIR_REL', $cms['app_relative_path']);
 
 
@@ -205,22 +192,6 @@ if ($cms->isRunThroughCommandLineInterface()) {
  */
 include DIR_APPLICATION . '/bootstrap/app.php';
 
-
-/**
- * ----------------------------------------------------------------------------
- * Set trusted proxies and headers for the request
- * ----------------------------------------------------------------------------
- */
-
-if($proxyHeaders = $config->get('concrete.security.trusted_proxies.headers')){
-    foreach($proxyHeaders as $key => $value) {
-        Request::setTrustedHeaderName($key, $value);
-    }
-}
-
-if($trustedProxiesIps = $config->get('concrete.security.trusted_proxies.ips')) {
-    Request::setTrustedProxies($trustedProxiesIps);
-}
 
 /**
  * ----------------------------------------------------------------------------

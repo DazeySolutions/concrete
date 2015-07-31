@@ -1,4 +1,4 @@
-<? 
+<?php 
 
 namespace Concrete\Controller\SinglePage\Dashboard\System\Attributes;
 use \Concrete\Core\Page\Controller\DashboardPageController;
@@ -46,7 +46,7 @@ class Topics extends DashboardPageController {
 		if ($this->token->validate('add_category_node')) {
 			$parent = TreeNode::getByID($treeNodeParentID);
 			$tree = $parent->getTreeObject();
-			$title = $_POST['treeNodeCategoryName'];
+			$title = Core::make('helper/text')->slugSafeString($_POST['treeNodeCategoryName']);
 			if (!$title) {
 				$this->error->add(t('Invalid title for category'));
 			}
@@ -111,7 +111,7 @@ class Topics extends DashboardPageController {
 			if (!($node instanceof TopicCategoryTreeNode)) {
 				$this->error->add(t('Invalid node.'));
 			}
-			$title = $_POST['treeNodeCategoryName'];
+			$title = Core::make('helper/text')->slugSafeString($_POST['treeNodeCategoryName']);
 			if (!$title) {
 				$this->error->add(t('Invalid title for category'));
 			}
@@ -140,7 +140,7 @@ class Topics extends DashboardPageController {
 		if ($this->token->validate('add_topic_node')) {
 			$parent = TreeNode::getByID($treeNodeParentID);
 			$tree = $parent->getTreeObject();
-			$title = $_POST['treeNodeTopicName'];
+			$title = Core::make('helper/text')->slugSafeString($_POST['treeNodeTopicName']);
 			if (!$title) {
 				$this->error->add(t('Invalid title for topic'));
 			}

@@ -22,16 +22,10 @@ class Flag
         }
 
         if ($region) {
-            $v = \View::getInstance();
-            
-            if ($v->getThemeDirectory() != '' && file_exists(
-                $v->getThemeDirectory() . '/' . DIRNAME_IMAGES . '/' . DIRNAME_IMAGES_LANGUAGES . '/' . $region . '.png'
-			)) {
-                $icon = $v->getThemePath() . '/' . DIRNAME_IMAGES . '/' . DIRNAME_IMAGES_LANGUAGES . '/' . $region . '.png';
-            } elseif (file_exists(
-                DIR_APPLICATION . '/' . DIRNAME_IMAGES . '/' . DIRNAME_IMAGES_LANGUAGES . '/' . $region . '.png'
+            if (file_exists(
+                DIR_BASE . '/' . DIRNAME_IMAGES . '/' . DIRNAME_IMAGES_LANGUAGES . '/' . $region . '.png'
             )) {
-                $icon = REL_DIR_APPLICATION . '/' . DIRNAME_IMAGES . '/' . DIRNAME_IMAGES_LANGUAGES . '/' . $region . '.png';
+                $icon = DIR_REL . '/' . DIRNAME_IMAGES . '/' . DIRNAME_IMAGES_LANGUAGES . '/' . $region . '.png';
             } else {
                 $icon = ASSETS_URL . '/' . DIRNAME_IMAGES . '/' . DIRNAME_IMAGES_LANGUAGES . '/' . $region . '.png';
             }
@@ -53,14 +47,8 @@ class Flag
         return self::getFlagIcon($icon, $filePathOnly);
     }
 
-    public static function getDashboardSitemapIconSRC($page)
+    public function getDashboardSitemapIconSRC($page)
     {
-        if ($page->getPageTypeHandle() == STACK_CATEGORY_PAGE_TYPE) {
-            $section = Section::getByLocale($page->getCollectionName());
-            if (is_object($section)) {
-                return self::getSectionFlagIcon($section, true);
-            }
-        }
         $ids = Section::getIDList();
         if (in_array($page->getCollectionID(), $ids)) {
             return self::getSectionFlagIcon($page, true);

@@ -1,13 +1,11 @@
 <?php
-
 namespace Concrete\Attribute\ImageFile;
 
-use Core;
-use Database;
+use Loader;
 use File;
 use Concrete\Core\Backup\ContentExporter;
 use Concrete\Core\Backup\ContentImporter;
-use Concrete\Core\Attribute\Controller as AttributeTypeController;
+use \Concrete\Core\Attribute\Controller as AttributeTypeController;
 
 class Controller extends AttributeTypeController
 {
@@ -15,7 +13,7 @@ class Controller extends AttributeTypeController
 
     public function getValue()
     {
-        $db = Database::connection();
+        $db = Loader::db();
         $value = $db->GetOne("select fID from atFile where avID = ?", array($this->getAttributeValueID()));
         if ($value > 0) {
             $f = File::getByID($value);
@@ -37,7 +35,7 @@ class Controller extends AttributeTypeController
         return $this->getDisplayValue();
     }
 
-    public function exportValue(\SimpleXMLElement $akn)
+    public function exportValue($akn)
     {
         $av = $akn->addChild('value');
         $fo = $this->getValue();
@@ -58,7 +56,7 @@ class Controller extends AttributeTypeController
 
     public function getSearchIndexValue()
     {
-        $db = Database::connection();
+        $db = Loader::db();
         $value = $db->GetOne("select fID from atFile where avID = ?", array($this->getAttributeValueID()));
 
         return $value;
@@ -78,7 +76,7 @@ class Controller extends AttributeTypeController
     public function search()
     {
         // search by file causes too many problems
-        //$al = Core::make('helper/concrete/asset_library');
+        //$al = Loader::helper('concrete/asset_library');
         //print $al->file('ccm-file-akID-' . $this->attributeKey->getAttributeKeyID(), $this->field('value'), t('Choose File'), $bf);
     }
 
@@ -88,7 +86,7 @@ class Controller extends AttributeTypeController
         if ($this->getAttributeValueID() > 0) {
             $bf = $this->getValue();
         }
-        $al = Core::make('helper/concrete/asset_library');
+        $al = Loader::helper('concrete/asset_library');
         $form = '<div class="ccm-attribute ccm-attribute-image-file">';
         $form .= $al->file('ccm-file-akID-' . $this->attributeKey->getAttributeKeyID(), $this->field('value'), t('Choose File'), $bf);
         $form .= '</div>';
@@ -101,7 +99,7 @@ class Controller extends AttributeTypeController
         if (!is_object($obj)) {
             $obj = File::getByID($obj);
         }
-        $db = Database::connection();
+        $db = Loader::db();
         if (is_object($obj) && (!$obj->isError())) {
             $db->Replace('atFile', array('avID' => $this->getAttributeValueID(), 'fID' => $obj->getFileID()), 'avID', true);
         }
@@ -109,7 +107,7 @@ class Controller extends AttributeTypeController
 
     public function deleteKey()
     {
-        $db = Database::connection();
+        $db = Loader::db();
         $arr = $this->attributeKey->getAttributeValueIDList();
         foreach ($arr as $id) {
             $db->Execute('delete from atFile where avID = ?', array($id));
@@ -120,22 +118,21 @@ class Controller extends AttributeTypeController
     {
         $f = $this->getValue();
         if (!is_object($f)) {
-            $e = Core::make('helper/validation/error');
+            $e = Loader::helper('validation/error');
             $e->add(t('You must specify a valid file for %s', $this->attributeKey->getAttributeKeyDisplayName()));
         }
-
         return $e;
     }
 
     public function validateForm($data)
     {
-        if (Core::make('helper/validation/numbers')->integer($data['value'])) {
+        if (Loader::helper('validation/numbers')->integer($data['value'])) {
             $f = File::getByID($data['value']);
             if (is_object($f) && !$f->isError()) {
                 return true;
             }
         }
-        $e = Core::make('helper/validation/error');
+        $e = Loader::helper('validation/error');
         $e->add(t('You must specify a valid file for %s', $this->attributeKey->getAttributeKeyDisplayName()));
 
         return $e;
@@ -147,14 +144,15 @@ class Controller extends AttributeTypeController
             $f = File::getByID($data['value']);
             $this->saveValue($f);
         } else {
-            $db = Database::connection();
+            $db = Loader::db();
             $db->Replace('atFile', array('avID' => $this->getAttributeValueID(), 'fID' => 0), 'avID', true);
         }
     }
 
     public function deleteValue()
     {
-        $db = Database::connection();
+        $db = Loader::db();
         $db->Execute('delete from atFile where avID = ?', array($this->getAttributeValueID()));
     }
+
 }

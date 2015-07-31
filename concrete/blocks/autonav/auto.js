@@ -55,7 +55,7 @@ function reloadPreview(event) {
     displaySubPages = $("select[name=displaySubPages]", container).val();
     displaySubPageLevels = $("select[name=displaySubPageLevels]", container).val();
     displaySubPageLevelsNum = $("input[name=displaySubPageLevelsNum]", container).val();
-    displayUnavailablePages = $("input[name=displayUnavailablePages]", container).is(':checked') ? 1 : 0;
+    displayUnavailablePages = $("input[name=displayUnavailablePages]", container).val();
     displayPagesCID = $("input[name=displayPagesCID]", container).val();
     displayPagesIncludeSelf = displayUnavailablePages;
 

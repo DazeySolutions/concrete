@@ -18,16 +18,9 @@ class Set extends Object {
 		}
 	}
 
-	public static function getByHandle($asHandle, $akCategoryID = null) {
+	public static function getByHandle($asHandle) {
 		$db = Loader::db();
-		if($akCategoryID > 0) {
-			$row = $db->GetRow(
-				'select asID, asHandle, pkgID, asName, akCategoryID, asIsLocked from AttributeSets where asHandle = ? AND akCategoryID = ?', 
-				array($asHandle, $akCategoryID)
-			);
-		} else {
-			$row = $db->GetRow('select asID, asHandle, pkgID, asName, akCategoryID, asIsLocked from AttributeSets where asHandle = ?', array($asHandle));
-		}
+		$row = $db->GetRow('select asID, asHandle, pkgID, asName, akCategoryID, asIsLocked from AttributeSets where asHandle = ?', array($asHandle));
 		if (isset($row['asID'])) {
 			$akc = new static();
 			$akc->setPropertiesFromArray($row);

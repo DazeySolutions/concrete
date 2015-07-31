@@ -263,7 +263,7 @@ define('STACKS_LISTING_PAGE_PATH', '/dashboard/blocks/stacks');
 define('STACKS_PAGE_PATH', '/!stacks');
 define('STACKS_AREA_NAME', 'Main');
 define('STACKS_PAGE_TYPE', 'core_stack');
-define('STACK_CATEGORY_PAGE_TYPE', 'core_stack_category');
+
 
 
 /**
@@ -273,7 +273,6 @@ define('STACK_CATEGORY_PAGE_TYPE', 'core_stack_category');
  */
 /* -- Appearance -- */
 define('VIEW_CORE_THEME', 'concrete');
-define('VIEW_CORE_THEME_TEMPLATE_BACKGROUND_IMAGE', 'background_image.php');
 
 /* -- Users -- */
 define('USER_SUPER', 'admin');

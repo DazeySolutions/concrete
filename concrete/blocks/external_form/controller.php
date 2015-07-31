@@ -1,12 +1,13 @@
 <?php
-
 namespace Concrete\Block\ExternalForm;
 
 use Concrete\Core\Block\BlockController;
-use Core;
+use Concrete\Core\Foundation\Object;
+use Loader;
 
 class Controller extends BlockController
 {
+
     public $helpers = array('file');
     protected $btTable = 'btExternalForm';
     protected $btInterfaceWidth = "370";
@@ -15,7 +16,7 @@ class Controller extends BlockController
     protected $btWrapperClass = 'ccm-ui';
 
     /**
-     * Used for localization. If we want to localize the name/description we have to include this.
+     * Used for localization. If we want to localize the name/description we have to include this
      */
     public function getBlockTypeDescription()
     {
@@ -32,12 +33,12 @@ class Controller extends BlockController
         return array('form-required' => t('You must select a form.'));
     }
 
-    public function getFilename()
+    function getFilename()
     {
         return $this->filename;
     }
 
-    public function getExternalFormFilenamePath()
+    function getExternalFormFilenamePath()
     {
         if ($this->filename) {
             if (file_exists(DIR_FILES_BLOCK_TYPES_FORMS_EXTERNAL . '/' . $this->filename)) {
@@ -60,7 +61,6 @@ class Controller extends BlockController
             if (method_exists($controller, $method)) {
                 return true;
             }
-
             return parent::isValidControllerTask($method, $parameters);
         }
     }
@@ -71,7 +71,6 @@ class Controller extends BlockController
         if (!$args['filename']) {
             $e->add(t('You must specify an external form.'));
         }
-
         return $e;
     }
 
@@ -86,24 +85,21 @@ class Controller extends BlockController
                 )
             );
             $cl->bID = $this->bID;
-
             return $cl;
-        } catch (\Exception $e) {
-        }
+        } catch (\Exception $e) {}
     }
 
-    public function runAction($method, $parameters = array())
+    public function runAction($method, $parameters)
     {
         if (in_array($method, array('add', 'edit'))) {
             parent::runAction($method, $parameters);
-
             return;
         }
 
         $controller = $this->getController();
         if ($controller) {
             $controller->runAction($method, $parameters);
-            foreach ($controller->getSets() as $key => $value) {
+            foreach($controller->getSets() as $key => $value) {
                 $this->set($key, $value);
             }
         }
@@ -116,8 +112,9 @@ class Controller extends BlockController
 
     public function getFormList()
     {
+
         $forms = array();
-        $fh = Core::make('helper/file');
+        $fh = Loader::helper('file');
 
         if (file_exists(DIR_FILES_BLOCK_TYPES_FORMS_EXTERNAL)) {
             $forms = array_merge(
@@ -137,4 +134,5 @@ class Controller extends BlockController
     {
         $this->set('filenames', $this->getFormList());
     }
+
 }

@@ -157,7 +157,6 @@ class BlockView extends AbstractView
                         ) . '/' . $this->controller->blockViewRenderOverride . '.php';
                     $this->setViewTemplate($env->getPath($template, $this->blockTypePkgHandle));
                 } else {
-                    $bFilename = false;
                     if ($this->block) {
                         $bFilename = $this->block->getBlockFilename();
                         $bvt = new BlockViewTemplate($this->block);
@@ -365,11 +364,6 @@ class BlockView extends AbstractView
     public function field($field)
     {
         return $field;
-    }
-
-    public function usedBlockCacheDuringRender()
-    {
-        return $this->didPullFromOutputCache;
     }
 
     public function finishRender($contents)

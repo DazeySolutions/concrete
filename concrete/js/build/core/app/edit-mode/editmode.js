@@ -106,12 +106,7 @@
                     if (!event_data || !event_data.action || event_data.action !== 'save_inline') {
                         $.get(action, data,
                             function (r) {
-                                var realBlock = my.getBlockByID(block.getId());
-                                if (!realBlock) {
-                                    return;
-                                }
-
-                                var newBlock = realBlock.replace(r);
+                                var newBlock = block.replace(r);
                                 _.defer(function () {
                                     ConcreteEvent.fire('EditModeExitInlineComplete', {
                                         block: newBlock
@@ -126,10 +121,7 @@
                     }
                 });
 
-                // We can't just wholesale disable the menu manager even though that makes
-                // it so that you can't click on blocks while they're disabled, because we
-                // need the file manager menu when editing block design.
-//              ConcreteMenuManager.disable();
+                ConcreteMenuManager.disable();
                 ConcreteToolbar.disable();
                 $('div.ccm-area').addClass('ccm-area-inline-edit-disabled');
                 block.getElem().addClass('ccm-block-edit-inline-active');
@@ -517,31 +509,9 @@
             return panel;
         },
 
-        getAreaByID: function editModeGetAreaByID(arID) {
+        getAreaByID: function areaGetByID(arID) {
             var areas = this.getAreas();
             return _.findWhere(areas, {id: parseInt(arID)});
-        },
-
-        getBlockByID: function editModeGetBockByID(blockID) {
-            var areas = this.getAreas(), match = null;
-
-            _(areas).every(function(area) {
-                if (match) {
-                    return false;
-                }
-                _(area.getBlocks()).every(function(block) {
-                    if (block.getId() == blockID) {
-                        match = block;
-                        return false;
-                    }
-
-                    return true;
-                });
-
-                return true;
-            });
-
-            return match;
         },
 
         /**

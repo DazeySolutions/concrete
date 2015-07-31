@@ -21,8 +21,6 @@ use Whoops\Exception\ErrorException;
 class Key extends Object
 {
 
-    protected $akID;
-
     public function getIndexedSearchTable()
     {
         return false;

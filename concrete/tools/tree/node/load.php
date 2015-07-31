@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 $node = \Concrete\Core\Tree\Node\Node::getByID(Loader::helper('security')->sanitizeInt($_REQUEST['treeNodeParentID']));
 $selected = array();
@@ -11,7 +11,6 @@ if (is_array($_REQUEST['treeNodeSelectedIDs'])) {
 if (is_object($node)) {
 	$np = new Permissions($node);
 	if ($np->canViewTreeNode()) {
-		$node->getTreeObject()->setRequest($_REQUEST);
 		$node->populateDirectChildrenOnly();
 		$r = array();
 		if(count($selected) > 0) {

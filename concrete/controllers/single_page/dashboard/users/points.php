@@ -1,6 +1,5 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\Users;
-use Concrete\Core\Error\Error;
 use \Concrete\Core\Page\Controller\DashboardPageController;
 use \Concrete\Core\User\Point\EntryList as UserPointEntryList;
 use \Concrete\Core\User\Point\Entry as UserPointEntry;
@@ -50,13 +49,6 @@ class Points extends DashboardPageController {
 	}
 	
 	public function deleteEntry($upID) {
-        if (!\Core::make('helper/validation/token')->validate('delete_community_points')) {
-            $this->error = new Error();
-            $this->error->add('Invalid Token');
-            $this->view();
-
-            return;
-        }
 		$up = new UserPointEntry();
 		$up->load($upID);
 		$up->Delete();

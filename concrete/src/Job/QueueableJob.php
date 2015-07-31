@@ -40,7 +40,7 @@ abstract class QueueableJob extends AbstractJob {
 	public function run() {}
 
     public function __construct() {
-        $this->jQueueBatchSize = Config::get('concrete.limits.job_queue_batch');
+        $this->jQueueBatchSize = Config::get('concrete.limits.job_queue.batch');
     }
 
 	public function getQueueObject() {

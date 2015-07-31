@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Multilingual\Page\Section;
 
 use Concrete\Core\Page\Page;
@@ -67,7 +66,7 @@ class Section extends Page
                 $numPlurals = count($localeInfo->categories);
                 $pluralRule = $localeInfo->formula;
                 $pluralCases = array();
-                foreach ($localeInfo->categories as $category) {
+                foreach($localeInfo->categories as $category) {
                     $pluralCases[] = $category->id.'@'.$category->examples;
                 }
             }
@@ -84,41 +83,45 @@ class Section extends Page
             array('cID'),
             true
         );
+
+        // Now we make sure we have multilingual enabled
+        Config::save('concrete.multilingual.enabled', true);
     }
 
     public function unassign()
     {
         $db = Database::get();
         $db->delete('MultilingualSections', array('cID' => $this->getCollectionID()));
+
+        $total = $db->GetOne('select count(*) from MultilingualSections');
+        if ($total < 1) {
+            Config::save('concrete.multilingual.enabled', false);
+        }
     }
 
-    private static function assignPropertiesFromArray($obj, $row)
-    {
+    private static function assignPropertiesFromArray($obj, $row) {
         $obj->msLanguage = $row['msLanguage'];
         $obj->msCountry = $row['msCountry'];
         $obj->msNumPlurals = $row['msNumPlurals'];
         $obj->msPluralRule = $row['msPluralRule'];
         $obj->msPluralCases = array();
-        foreach (explode("\n", $row['msPluralCases']) as $line) {
+        foreach(explode("\n", $row['msPluralCases']) as $line) {
             list($key, $examples) = explode('@', $line);
             $obj->msPluralCases[$key] = $examples;
         }
     }
 
     /**
-     * Returns an instance of  MultilingualSection for the given page ID.
-     *
+     * returns an instance of  MultilingualSection for the given page ID
      * @param int $cID
-     * @param int|string $cvID
-     * @param string $class
-     *
+     * @param int $cvID
      * @return MultilingualSection|false
      */
-    public static function getByID($cID, $cvID = 'RECENT', $class = '\Concrete\Core\Multilingual\Page\Section\Section')
+    public static function getByID($cID, $cvID = 'RECENT')
     {
         $r = self::isMultilingualSection($cID);
         if ($r) {
-            $obj = parent::getByID($cID, $cvID, $class);
+            $obj = parent::getByID($cID, $cvID, '\Concrete\Core\Multilingual\Page\Section\Section');
             self::assignPropertiesFromArray($obj, $r);
 
             return $obj;
@@ -129,7 +132,6 @@ class Section extends Page
 
     /**
      * @param string $language
-     *
      * @return Section|false
      */
     public static function getByLanguage($language)
@@ -151,7 +153,6 @@ class Section extends Page
 
     /**
      * @param string $language
-     *
      * @return Section|false
      */
     public static function getByLocale($locale)
@@ -173,8 +174,7 @@ class Section extends Page
     }
 
     /**
-     * Gets the MultilingualSection object for the current section of the site.
-     *
+     * gets the MultilingualSection object for the current section of the site
      * @return Section
      */
     public static function getCurrentSection()
@@ -207,45 +207,22 @@ class Section extends Page
 
     /**
      * @param Page $page
-     *
      * @return Section
      */
     public static function getBySectionOfSite($page)
     {
-        $identifier = sprintf('/multilingual/section/%s', $page->getCollectionID());
-        $cache = \Core::make('cache/request');
-        $item = $cache->getItem($identifier);
-        if (!$item->isMiss()) {
-            $returnID = $item->get();
-        } else {
-            $item->lock();
-            if ($page->getPageTypeHandle() == STACKS_PAGE_TYPE) {
-                $parent = Page::getByID($page->getCollectionParentID());
-                if ($parent->getCollectionPath() == STACKS_PAGE_PATH) {
-                    // this is the default multilingual section.
-                    return static::getDefaultSection();
-                } else {
-                    // this is a stack category page type
-                    $locale = $parent->getCollectionHandle();
-
-                    return static::getByLocale($locale);
-                }
+        // looks at the page, traverses its parents until it finds the proper language
+        $nav = \Core::make('helper/navigation');
+        $pages = $nav->getTrailToCollection($page);
+        $pages = array_reverse($pages);
+        $pages[] = $page;
+        $ids = self::getIDList();
+        $returnID = false;
+        foreach ($pages as $pc) {
+            if (in_array($pc->getCollectionID(), $ids)) {
+                $returnID = $pc->getCollectionID();
             }
-            // looks at the page, traverses its parents until it finds the proper language
-            $nav = \Core::make('helper/navigation');
-            $pages = $nav->getTrailToCollection($page);
-            $pages = array_reverse($pages);
-            $pages[] = $page;
-            $ids = self::getIDList();
-            $returnID = false;
-            foreach ($pages as $pc) {
-                if (in_array($pc->getCollectionID(), $ids)) {
-                    $returnID = $pc->getCollectionID();
-                }
-            }
-            $item->set($returnID);
         }
-
         if ($returnID) {
             return static::getByID($returnID);
         }
@@ -264,11 +241,6 @@ class Section extends Page
         }
 
         return $locale;
-    }
-
-    public static function getDefaultSection()
-    {
-        return static::getByLocale(Config::get('concrete.multilingual.default_locale'));
     }
 
     public function getLanguageText($locale = null)
@@ -296,10 +268,8 @@ class Section extends Page
     }
 
     /**
-     * Returns the number of plural forms.
-     *
+     * Returns the number of plural forms
      * @return int
-     *
      * @example For Japanese: returns 1
      * @example For English: returns 2
      * @example For French: returns 2
@@ -311,10 +281,8 @@ class Section extends Page
     }
 
     /**
-     * Returns the rule to determine which plural we should use (in gettext notation).
-     *
+     * Returns the rule to determine which plural we should use (in gettext notation)
      * @return string
-     *
      * @example For Japanese: returns '0'
      * @example For English: returns 'n != 1'
      * @example For French: returns 'n > 1'
@@ -326,10 +294,8 @@ class Section extends Page
     }
 
     /**
-     * Returns the plural cases for the language; array keys are the case name, array values are some examples for that case.
-     *
+     * Returns the plural cases for the language; array keys are the case name, array values are some examples for that case
      * @return array
-     *
      * @example For Japanese: returns
      *     'other' => '0~15, 100, 1000, 10000, 100000, 1000000, …'
      * @example For English: returns
@@ -350,7 +316,7 @@ class Section extends Page
 
     public static function registerPage($page)
     {
-        if (\Core::make('multilingual/detector')->isEnabled()) {
+        if (Config::get('concrete.multilingual.enabled')) {
             $db = Database::get();
             $ms = static::getBySectionOfSite($page);
             if (is_object($ms)) {
@@ -367,7 +333,7 @@ class Section extends Page
                 if (!$mpRelationID) {
                     $mpRelationID = 1;
                 } else {
-                    ++$mpRelationID;
+                    $mpRelationID++;
                 }
                 $v = array($mpRelationID, $page->getCollectionID(), $ms->getLanguage(), $ms->getLocale());
                 $db->Execute(
@@ -413,7 +379,7 @@ class Section extends Page
                 if (!$mpRelationID) {
                     $mpRelationID = 1;
                 } else {
-                    ++$mpRelationID;
+                    $mpRelationID++;
                 }
                 $v = array($mpRelationID, $page->getCollectionID(), $ms->getLanguage(), $ms->getLocale());
                 $db->Execute(
@@ -516,7 +482,7 @@ class Section extends Page
                 if (!$mpRelationID) {
                     $mpRelationID = 1;
                 } else {
-                    ++$mpRelationID;
+                    $mpRelationID++;
                 }
 
                 // adding in a check to see if old page was part of a language section or neutral.
@@ -550,11 +516,6 @@ class Section extends Page
             $pde->setLocale($ms->getLocale());
             \Events::dispatch('on_multilingual_page_relate', $pde);
         }
-    }
-
-    public function isDefaultMultilingualSection()
-    {
-        return $this->getLocale() == Config::get('concrete.multilingual.default_locale');
     }
 
     public static function isMultilingualSection($cID)
@@ -623,9 +584,7 @@ class Section extends Page
     }
 
     /**
-     * Receives a page in a different language tree, and tries to return the corresponding page in the current language tree.
-     *
-     * @return int|null
+     * Receives a page in a different language tree, and tries to return the corresponding page in the current language tree
      */
     public function getTranslatedPageID($page)
     {
@@ -648,10 +607,8 @@ class Section extends Page
     }
 
     /**
-     * Loads the translations of this multilingual section.
-     *
+     * Loads the translations of this multilingual section
      * @param bool $untranslatedFirst Set to true to have untranslated strings first
-     *
      * @return \Gettext\Translations
      */
     public function getSectionInterfaceTranslations($untranslatedFirst = false)

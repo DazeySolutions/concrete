@@ -49,18 +49,20 @@ class Surveys extends DashboardPageController
         $v = array(intval($bID), intval($cID));
         $q =
             'SELECT
-                  btSurveyOptions.optionName,
-                   Users.uName,
-                   ipAddress,
-                   timestamp,
-                   question
-             FROM
-                  btSurveyResults
-                  INNER JOIN btSurveyOptions ON btSurveyOptions.optionId = btSurveyResults.optionID
-                  INNER JOIN btSurvey ON btSurvey.bID = btSurveyResults.bID
-                  LEFT JOIN Users ON Users.uID = btSurveyResults.uID
-			 WHERE
-				btSurveyResults.bID = ? AND btSurveyResults.cId = ?';
+				btSurveyOptions.optionName, Users.uName, ipAddress, timestamp, question
+			FROM
+				(
+						(
+							btSurvey
+							inner join btSurveyResults on btSurvey.bID= btSurveyResults.bID
+						)
+					inner join btSurveyOptions on btSurveyResults.optionID = btSurveyOptions.optionID
+				)
+				left join Users on btSurveyResults.uID = Users.uID
+			WHERE
+				btSurveyResults.bID = ?
+				AND
+				btSurveyResults.cID = ?';
         $r = $db->query($q, $v);
 
         // Set default information in case query returns nothing

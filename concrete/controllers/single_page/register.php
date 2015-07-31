@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Controller\SinglePage;
 use \PageController;
 use Config;
@@ -71,11 +71,11 @@ class Register extends PageController {
 			}
 
 
-			if (strlen($username) >= Config::get('concrete.user.username.minimum') && strlen($username) <= Config::get('concrete.user.username.maximum') && !$valc->username($username)) {
+			if (strlen($username) >= Config::get('concrete.user.username.minimum') && !$valc->username($username)) {
 				if(Config::get('concrete.user.username.allow_spaces')) {
-					$e->add(t('A username may only contain letters, numbers, spaces (not at the beginning/end), dots (not at the beginning/end), underscores (not at the beginning/end).'));
+					$e->add(t('A username may only contain letters, numbers and spaces.'));
 				} else {
-					$e->add(t('A username may only contain letters, numbers, dots (not at the beginning/end), underscores (not at the beginning/end).'));
+					$e->add(t('A username may only contain letters or numbers.'));
 				}
 
 			}
@@ -191,13 +191,8 @@ class Register extends PageController {
                     $uHash = $process->setupValidation();
 
                     $mh = Loader::helper('mail');
-                    $fromEmail = (string) Config::get('concrete.email.validate_registration.address');
-                    if (strpos($fromEmail, '@')) {
-                        $fromName = (string) Config::get('concrete.email.validate_registration.name');
-                        if ($fromName === '') {
-                            $fromName = t('Validate Email Address');
-                        }
-                        $mh->from($fromEmail,  $fromName);
+                    if (defined('EMAIL_ADDRESS_VALIDATE')) {
+                        $mh->from(EMAIL_ADDRESS_VALIDATE,  t('Validate Email Address'));
                     }
                     $mh->addParameter('uEmail', $_POST['uEmail']);
                     $mh->addParameter('uHash', $uHash);
@@ -213,15 +208,6 @@ class Register extends PageController {
 				} else if(Config::get('concrete.user.registration.approval')) {
 					$ui = UserInfo::getByID($u->getUserID());
 					$ui->deactivate();
-					// Email to the user when he/she registered but needs approval
-					$mh = Loader::helper('mail');
-					$mh->addParameter('uEmail', $_POST['uEmail']);
-					$mh->addParameter('uHash', $uHash);
-					$mh->addParameter('site', Config::get('concrete.site'));
-					$mh->to($_POST['uEmail']);
-					$mh->load('user_register_approval_required_to_user');
-					$mh->sendMail();
-					
 					//$this->redirect('/register', 'register_pending', $rcID);
 					$redirectMethod='register_pending';
 					$this->set('message', $this->getRegisterPendingMsg());

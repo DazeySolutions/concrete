@@ -1,13 +1,14 @@
 <?php
-
 namespace Concrete\Block\GoogleMap;
 
+use Loader;
 use Page;
-use Concrete\Core\Block\BlockController;
+use \Concrete\Core\Block\BlockController;
 use Core;
 
 class Controller extends BlockController
 {
+
     protected $btTable = 'btGoogleMap';
     protected $btInterfaceWidth = "400";
     protected $btInterfaceHeight = "320";
@@ -24,7 +25,7 @@ class Controller extends BlockController
     public $zoom = 14;
 
     /**
-     * Used for localization. If we want to localize the name/description we have to include this.
+     * Used for localization. If we want to localize the name/description we have to include this
      */
     public function getBlockTypeDescription()
     {
@@ -36,9 +37,10 @@ class Controller extends BlockController
         return t("Google Map");
     }
 
+
     public function validate($args)
     {
-        $error = Core::make('helper/validation/error');
+        $error = Loader::helper('validation/error');
 
         if (empty($args['location']) || $args['latitude'] === '' || $args['longtitude'] === '') {
             $error->add(t('You must select a valid location.'));
@@ -63,7 +65,7 @@ class Controller extends BlockController
 
     public function view()
     {
-        $this->set('unique_identifier', Core::make('helper/validation/identifier')->getString(18));
+		$this->set('unique_identifier', Core::make('helper/validation/identifier')->getString(18));
         $this->set('bID', $this->bID);
         $this->set('title', $this->title);
         $this->set('location', $this->location);
@@ -75,18 +77,8 @@ class Controller extends BlockController
 
     public function save($data)
     {
-        $data += array(
-           'title' => '',
-           'location' => '',
-           'zoom' => -1,
-           'latitude' => 0,
-           'longitude' => 0,
-           'width' => null,
-           'width' => null,
-           'scrollwheel' => 0,
-        );
-        $args['title'] = trim($data['title']);
-        $args['location'] = trim($data['location']);
+        $args['title'] = isset($data['title']) ? trim($data['title']) : '';
+        $args['location'] = isset($data['location']) ? trim($data['location']) : '';
         $args['zoom'] = (intval($data['zoom']) >= 0 && intval($data['zoom']) <= 21) ? intval($data['zoom']) : 14;
         $args['latitude'] = is_numeric($data['latitude']) ? $data['latitude'] : 0;
         $args['longitude'] = is_numeric($data['longitude']) ? $data['longitude'] : 0;
@@ -95,4 +87,5 @@ class Controller extends BlockController
         $args['scrollwheel'] = $data['scrollwheel'] ? 1 : 0;
         parent::save($args);
     }
+
 }

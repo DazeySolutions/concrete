@@ -1,61 +1,32 @@
 <?php
 namespace Concrete\Core\Page;
-
 use \Symfony\Component\EventDispatcher\GenericEvent;
-use Concrete\Core\Http\RequestEventInterface;
-use Symfony\Component\HttpFoundation\Request;
 
-class FeedEvent extends GenericEvent implements RequestEventInterface
+class FeedEvent extends Event
 {
 
-    protected $feed;
-    protected $writer;
-    protected $request;
+	protected $feed;
+	protected $writer;
 
-    /**
-     * @param Request $request
-     */
-    public function setRequest(Request $request)
-    {
-        $this->request = $request;
-    }
+	public function getFeedObject()
+	{
+		return $this->feed;
+	}
 
-    /** @return \Symfony\Component\HttpFoundation\Request */
-    public function getRequest()
-    {
-        return $this->request;
-    }
+	public function setFeedObject($feed)
+	{
+		return $this->feed = $feed;
+	}
 
+	public function setWriterObject($writer)
+	{
+		return $this->writer = $writer;
+	}
 
-    public function getPageObject()
-    {
-        return $this->page;
-    }
-
-    public function setPageObject(Page $c)
-    {
-        $this->page = $c;
-    }
-
-    public function getFeedObject()
-    {
-        return $this->feed;
-    }
-
-    public function setFeedObject($feed)
-    {
-        return $this->feed = $feed;
-    }
-
-    public function setWriterObject($writer)
-    {
-        return $this->writer = $writer;
-    }
-
-    public function getWriterObject()
-    {
-        return $this->writer;
-    }
+	public function getWriterObject()
+	{
+		return $this->writer;
+	}
 
 
 }

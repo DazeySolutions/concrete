@@ -2,7 +2,6 @@
 namespace Concrete\Core\Config;
 
 use Illuminate\Filesystem\Filesystem;
-use Concrete\Core\Cache\OpCache;
 
 class FileSaver implements SaverInterface
 {
@@ -19,23 +18,9 @@ class FileSaver implements SaverInterface
         $this->files = $files;
     }
 
-    protected function getStorageDirectory()
-    {
-        return DIR_APPLICATION . '/config/generated_overrides';
-    }
-
-    protected function getFilename($group, $path = null)
-    {
-        if (!$path) {
-            return 'group.php';
-        } else {
-            return "{$path}/{$group}.php";
-        }
-    }
-
     public function save($item, $value, $environment, $group, $namespace = null)
     {
-        $path = $this->getStorageDirectory();
+        $path = DIR_APPLICATION . '/config/generated_overrides';
 
         if (!$this->files->exists($path)) {
             $this->files->makeDirectory($path, 0777);
@@ -57,7 +42,7 @@ class FileSaver implements SaverInterface
             }
         }
 
-        $file = $this->getFilename($group, $path);
+        $file = "{$path}/{$group}.php";
 
         $current = array();
         if ($this->files->exists($file)) {
@@ -95,12 +80,8 @@ class FileSaver implements SaverInterface
 
 
         $rendered = $renderer->render(PHP_EOL, '    ', implode(PHP_EOL, $header));
-        $result = $this->files->put($file, $rendered) !== false;
-        if ($result) {
-            OpCache::clear($file);
-        }
+        return $this->files->put($file, $rendered) !== false;
 
-        return $result;
     }
 
 }

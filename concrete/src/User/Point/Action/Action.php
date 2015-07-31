@@ -4,7 +4,6 @@ use Loader;
 use Environment;
 use \Concrete\Core\Package\PackageList;
 use Group;
-use Core;
 use User;
 use UserInfo;
 use \Concrete\Core\User\Point\Entry as UserPointEntry;
@@ -40,32 +39,19 @@ class Action {
 		$db = Loader::db();
 		$row = $db->getRow("SELECT * FROM UserPointActions WHERE upaID = ?",array($upaID));
 		if ($row['upaID']) {
-			$upa = static::getClass($row);
+			$class = 'UserPointAction';
+			if ($row['upaHasCustomClass']) {
+				$pkgHandle = false;
+				if ($row['pkgID']) {
+					$pkgHandle = PackageList::getHandle($row['pkgID']);
+				}
+
+				$class = Loader::helper('text')->camelcase($row['upaHandle']) . $class;
+			}
+			$upa = new Action;
 			$upa->setDataFromArray($row);
 			return $upa;
 		}
-	}
-
-	protected static function getClass($row)
-	{
-		$standardClass = '\\Concrete\Core\\User\\Point\\Action\\Action';
-		if ($row['upaHasCustomClass']) {
-			$handleClass = \Loader::helper('text')->camelcase($row['upaHandle']) . 'Action';
-			$pkgHandle = PackageList::getHandle($row['pkgID']);
-			$customClass = overrideable_core_class(
-				'Core\\User\\Point\\Action\\' . $handleClass,
-				DIRNAME_CLASSES . '/User/Point/Action/' . $handleClass . '.php',
-				$pkgHandle
-			);
-			try {
-				$upa = Core::make($customClass);
-			} catch (\ReflectionException $e) {
-				$upa = Core::make($standardClass);
-			}
-		} else {
-			$upa = Core::make($standardClass);
-		}
-		return $upa;
 	}
 
 
@@ -96,7 +82,16 @@ class Action {
 		$db = Loader::db();
 		$row = $db->getRow("SELECT * FROM UserPointActions WHERE upaHandle = ?",array($upaHandle));
 		if ($row['upaID']) {
-			$upa = static::getClass($row);
+			$class = 'UserPointAction';
+			if ($row['upaHasCustomClass']) {
+				$pkgHandle = false;
+				if ($row['pkgID']) {
+					$pkgHandle = PackageList::getHandle($row['pkgID']);
+				}
+
+				$class = Loader::helper('text')->camelcase($row['upaHandle']) . $class;
+			}
+			$upa = new Action;
 			$upa->setDataFromArray($row);
 			return $upa;
 		}
@@ -126,11 +121,11 @@ class Action {
 		}
 
 		$env = Environment::get();
-		$upaHandleCamel = \Core::make("helper/text")->camelcase($upaHandle);
-		$r = $env->getRecord(DIRNAME_CLASSES . '/User/Point/Action/' . $upaHandleCamel . 'Action.php', $pkgHandle);
+		$r = $env->getRecord(DIRNAME_MODELS . '/' . DIRNAME_USER_POINTS . '/' . DIRNAME_ACTIONS . '/' . $upaHandle . '.php', $pkgHandle);
 		if ($r->exists()) {
 			$upa->upaHasCustomClass = 1;
 		}
+
 		$upa->save();
 	}
 
@@ -145,7 +140,6 @@ class Action {
 			$this->upaHandle = $data['upaHandle'];
 			$this->upaName = $data['upaName'];
 			$this->upaDefaultPoints = $data['upaDefaultPoints'];
-			$this->upaHasCustomClass = $data['upaHasCustomClass'];
 			$this->gBadgeID = $data['gBadgeID'];
 			$this->upaIsActive = $data['upaIsActive'];
 			return true;
@@ -164,7 +158,7 @@ class Action {
 	 */
 	public function hasCustomClass()
 	{
-		return $this->upaHasCustomClass ? true : false;
+		return $this->upaHasCustomClass;
 	}
 
 	public function getPackageHandle()

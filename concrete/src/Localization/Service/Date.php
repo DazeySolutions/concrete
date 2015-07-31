@@ -2,11 +2,9 @@
 namespace Concrete\Core\Localization\Service;
 
 use Request;
-use Punic\Calendar;
+use \Punic\Calendar;
 use Localization;
 use User;
-use Core;
-use Config;
 
 class Date
 {
@@ -252,19 +250,16 @@ class Date
     {
         switch ($timezone) {
             case 'system':
-                $timezone = Config::get('app.server_timezone', date_default_timezone_get());
+                $timezone = \Config::get('app.server_timezone', date_default_timezone_get());
                 break;
             case 'app':
-                $timezone = Config::get('app.timezone', date_default_timezone_get());
+                $timezone = \Config::get('app.timezone', date_default_timezone_get());
                 break;
             case 'user':
                 $tz = null;
-                if (Config::get('concrete.misc.user_timezones')) {
+                if (defined('ENABLE_USER_TIMEZONES') && ENABLE_USER_TIMEZONES) {
                     $u = null;
-                    $request = null;
-                    if(!Core::make('app')->isRunThroughCommandLineInterface()) {
-                        $request =  Request::getInstance();
-                    }
+                    $request = C5_ENVIRONMENT_ONLY ? Request::getInstance() : null;
                     if ($request && $request->hasCustomRequestUser()) {
                         $u = $request->getCustomRequestUser();
                     } elseif (User::isLoggedIn()) {
@@ -612,7 +607,7 @@ class Date
             $datetime = new \DateTime();
         }
 
-        if (Config::get('concrete.misc.user_timezones')) {
+        if (defined('ENABLE_USER_TIMEZONES') && ENABLE_USER_TIMEZONES) {
             $u = new User();
             if ($u && $u->isRegistered()) {
                 $utz = $u->getUserTimezone();
@@ -643,7 +638,7 @@ class Date
         }
         $datetime = new \DateTime($userDateTime);
 
-        $timezone = Config::get('app.timezone');
+        $timezone = \Config::get('app.timezone');
         if ($timezone) {
             $tz = new \DateTimeZone($timezone);
 
@@ -651,13 +646,13 @@ class Date
             $datetime = new \DateTime($userDateTime, $tz);
 
             // grab the default timezone
-            $stz = new \DateTimeZone(Config::get('app.server_timezone', date_default_timezone_get()));
+            $stz = new \DateTimeZone(\Config::get('app.server_timezone', date_default_timezone_get()));
 
             // convert the datetime object to the current timezone
             $datetime->setTimeZone($stz);
         }
 
-        if (Config::get('concrete.misc.user_timezones')) {
+        if (defined('ENABLE_USER_TIMEZONES') && ENABLE_USER_TIMEZONES) {
             $u = new User();
             if ($u && $u->isRegistered()) {
                 $utz = $u->getUserTimezone();
@@ -668,7 +663,7 @@ class Date
                     $datetime = new \DateTime($userDateTime, $tz);
 
                     // grab the default timezone
-                    $stz = new \DateTimeZone(Config::get('app.server_timezone', date_default_timezone_get()));
+                    $stz = new \DateTimeZone(\Config::get('app.server_timezone', date_default_timezone_get()));
 
                     // convert the datetime object to the server timezone
                     $datetime->setTimeZone($stz);

@@ -35,13 +35,8 @@ abstract class Snippet extends Object {
 			if ($r['pkgID']) {
 				$pkgHandle = PackageList::getHandle($r['pkgID']);
 			}
-
-			$class = overrideable_core_class(
-				'Core\\Editor\\' . camelcase($r['scsHandle']) . 'Snippet',
-				DIRNAME_CLASSES . '/Editor/' . camelcase($r['scsHandle']) . 'Snippet.php',
-				$pkgHandle
-			);
-
+			$txt = Loader::helper('text');
+			$class = '\\Concrete\\Core\\Editor\\' . $txt->camelcase($r['scsHandle']) . 'Snippet';
 			$sc = Core::make($class);
 			$sc->setPropertiesFromArray($r);
 			return $sc;

@@ -30,11 +30,6 @@ class AssetPointer
         return $this->assetHandle;
     }
 
-    public function getIdentifier()
-    {
-        return $this->assetType . $this->assetHandle;
-    }
-
     /**
      * @param string $assetType
      * @param string $assetHandle
