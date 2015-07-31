@@ -1,4 +1,4 @@
-<?php
+<?
 defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 
@@ -6,8 +6,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 <div data-container="editable-fields">
 
 <section>
-	<h4><?php echo t('Other Attributes')?></h4>
-	<?php 
+	<h4><?=t('Other Attributes')?></h4>
+	<? 
 
 	Loader::element('attribute/editable_list', array(
 		'attributes' => $attributes, 
@@ -23,9 +23,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 <script type="text/javascript">
 	$('div[data-container=editable-fields]').concreteEditableFieldContainer({
 		data: [
-			<?php foreach($files as $f) { ?>
-				{'name': 'fID[]', 'value': '<?php echo $f->getFileID()?>'},
-			<?php } ?>	
+			<? foreach($files as $f) { ?>
+				{'name': 'fID[]', 'value': '<?=$f->getFileID()?>'},
+			<? } ?>	
 		]
 	});
 </script>

@@ -103,15 +103,14 @@ class BlockType
         $db = DB::get();
         $r = $db->MetaTables();
 
-        if (in_array('Config', $r)) {
+        if (in_array('config', array_map('strtolower', $r))) {
 
-            if(in_array('btCachedBlockRecord', $db->MetaColumnNames('Blocks'))) {
+            if (in_array('btcachedblockrecord', array_map('strtolower', $db->MetaColumnNames('Blocks')))) {
                 $db->Execute('update Blocks set btCachedBlockRecord = null');
             }
-            if (in_array('CollectionVersionBlocksOutputCache', $r)) {
+            if (in_array('collectionversionblocksoutputcache', array_map('strtolower', $r))) {
                 $db->Execute('truncate table CollectionVersionBlocksOutputCache');
             }
-
         }
     }
 
@@ -636,8 +635,17 @@ class BlockType
     {
         $db = Loader::db();
         $r = $db->Execute(
-                'select cID, cvID, b.bID, arHandle from CollectionVersionBlocks cvb inner join Blocks b on b.bID = cvb.bID where btID = ?',
-                array($this->getBlockTypeID()));
+                'select cID, cvID, b.bID, arHandle
+                from CollectionVersionBlocks cvb
+                    inner join Blocks b on b.bID  = cvb.bID
+                where btID = ?
+                union
+                select cID, cvID, cvb.bID, arHandle
+                from CollectionVersionBlocks cvb
+                    inner join btCoreScrapbookDisplay btCSD on cvb.bID = btCSD.bID
+                    inner join Blocks b on b.bID = btCSD.bOriginalID
+                where btID = ?',
+                array($this->getBlockTypeID(), $this->getBlockTypeID()));
         while ($row = $r->FetchRow()) {
             $nc = Page::getByID($row['cID'], $row['cvID']);
             if (!is_object($nc) || $nc->isError()) {

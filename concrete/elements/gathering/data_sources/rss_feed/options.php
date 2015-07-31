@@ -1,12 +1,12 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
-<?php
+<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?
 if (is_object($configuration)) { 
 	$rssFeedURL = $configuration->getRSSFeedURL();
 }
 ?>
 <div class="control-group">
-	<label class="control-label"><?php echo t('RSS Feed')?></label>
+	<label class="control-label"><?=t('RSS Feed')?></label>
 	<div class="controls">
-		<?php echo $form->text($source->optionFormKey('rssFeedURL'), $rssFeedURL)?>
+		<?=$form->text($source->optionFormKey('rssFeedURL'), $rssFeedURL)?>
 	</div>
 </div>

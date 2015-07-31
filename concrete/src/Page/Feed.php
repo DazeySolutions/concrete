@@ -17,6 +17,38 @@ class Feed
     protected $checkPagePermissions = true;
 
     /**
+     * @Column(type="string")
+     */
+    protected $customTopicAttributeKeyHandle = null;
+
+
+    /**
+     * @Column(columnDefinition="integer unsigned")
+     */
+    protected $customTopicTreeNodeID = 0;
+
+    /**
+     * @Column(columnDefinition="integer unsigned")
+     */
+    protected $iconFID = 0;
+
+    /**
+     * @return mixed
+     */
+    public function getIconFileID()
+    {
+        return $this->iconFID;
+    }
+
+    /**
+     * @param mixed $iconFID
+     */
+    public function setIconFileID($iconFID)
+    {
+        $this->iconFID = $iconFID;
+    }
+
+    /**
      * @param mixed $cParentID
      */
     public function setParentID($cParentID)
@@ -118,6 +150,38 @@ class Feed
     public function getTitle()
     {
         return $this->pfTitle;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCustomTopicAttributeKeyHandle()
+    {
+        return $this->customTopicAttributeKeyHandle;
+    }
+
+    /**
+     * @param mixed $customTopicAttributeKeyHandle
+     */
+    public function setCustomTopicAttributeKeyHandle($customTopicAttributeKeyHandle)
+    {
+        $this->customTopicAttributeKeyHandle = $customTopicAttributeKeyHandle;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCustomTopicTreeNodeID()
+    {
+        return $this->customTopicTreeNodeID;
+    }
+
+    /**
+     * @param mixed $customTopicTreeNodeID
+     */
+    public function setCustomTopicTreeNodeID($customTopicTreeNodeID)
+    {
+        $this->customTopicTreeNodeID = $customTopicTreeNodeID;
     }
 
     /**
@@ -348,6 +412,9 @@ class Feed
                 $pl->filterByParentID($this->cParentID);
             }
         }
+        if ($this->getCustomTopicAttributeKeyHandle()) {
+            $pl->filterByTopic(intval($this->getCustomTopicTreeNodeID()));
+        }
         if ($this->pfDisplayAliases) {
             $pl->includeAliases();
         }
@@ -362,9 +429,11 @@ class Feed
 
     protected function getPageFeedContent(Page $p)
     {
+        $content = false;
         switch($this->pfContentToDisplay) {
             case 'S':
-                return $p->getCollectionDescription();
+                $content = $p->getCollectionDescription();
+                break;
             case 'A':
                 $a = new \Area($this->getAreaHandleToDisplay());
                 $blocks = $a->getAreaBlocksArray($p);
@@ -377,23 +446,44 @@ class Feed
                 }
                 $content = ob_get_contents();
                 ob_end_clean();
-                return $content;
+                break;
         }
+
+        $f = $p->getAttribute('thumbnail');
+        if (is_object($f)) {
+            $content = '<p><img src="' . $f->getURL() . '" /></p>' . $content;
+        }
+        return $content;
     }
 
     public function getOutput($request = null)
     {
         $pl = $this->getPageListObject();
+        $link = false;
         if ($this->cParentID) {
             $parent = Page::getByID($this->cParentID);
             $link = $parent->getCollectionLink();
+        } else {
+            $link = \URL::to('/');
         }
         $pagination = $pl->getPagination();
         if ($pagination->getTotalResults() > 0) {
             $writer = new \Zend\Feed\Writer\Feed();
             $writer->setTitle($this->getTitle());
             $writer->setDescription($this->getDescription());
+            if ($this->getIconFileID()) {
+                $f = \File::getByID($this->getIconFileID());
+                if (is_object($f)) {
+                    $data = array(
+                        'uri' => $f->getURL(),
+                        'title' => $f->getTitle(),
+                        'link' => (string) $link
+                    );
+                    $writer->setImage($data);
+                }
+            }
             $writer->setLink((string) $link);
+
             foreach($pagination->getCurrentPageResults() as $p) {
                 $entry = $writer->createEntry();
                 $entry->setTitle($p->getCollectionName());
@@ -407,7 +497,10 @@ class Feed
                 $writer->addEntry($entry);
             }
 
-            $ev = new FeedEvent($parent);
+            $ev = new FeedEvent();
+            if (isset($parent)) {
+                $ev->setPageObject($parent);
+            }
             $ev->setFeedObject($this);
             $ev->setWriterObject($writer);
             $ev->setRequest($request);

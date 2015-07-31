@@ -1,4 +1,4 @@
-<?php
+<?
 defined('C5_EXECUTE') or die("Access Denied.");
 
 $subject = $siteName.' '.t("Registration - Approval Required");
@@ -9,21 +9,21 @@ $subject = $siteName.' '.t("Registration - Approval Required");
 ob_start()
 
 ?>
-<h2><?php echo t('Registration Approval Required') ?></h2>
-<?php echo t('A new user has registered on your website. This account must be approved before it is active and may login.') ?><br />
-<?php echo t('User Name') ?>: <b><?php echo $uName ?></b><br />
-<?php echo t('Email') ?>: <b><?php echo $uEmail ?></b><br />
+<h2><?= t('Registration Approval Required') ?></h2>
+<?= t('A new user has registered on your website. This account must be approved before it is active and may login.') ?><br />
+<?= t('User Name') ?>: <b><?= $uName ?></b><br />
+<?= t('Email') ?>: <b><?= $uEmail ?></b><br />
 <br />
-<?php echo t('You may approve or remove this user account here:') ?><br />
-<a href="<?php echo View::url('/dashboard/users/search', 'view', $uID) ?>"><?php echo View::url('/dashboard/users/search', 'view', $uID) ?></a>
-<?php if($attribs): ?>
+<?= t('You may approve or remove this user account here:') ?><br />
+<a href="<?= View::url('/dashboard/users/search', 'view', $uID) ?>"><?= View::url('/dashboard/users/search', 'view', $uID) ?></a>
+<? if($attribs): ?>
 	<ul>
-	<?php foreach($attribs as $item): ?>
-		<li><?php echo $item ?></li>
-	<?php endforeach ?>
+	<? foreach($attribs as $item): ?>
+		<li><?= $item ?></li>
+	<? endforeach ?>
 	</ul>
-<?php endif ?>
-<?php
+<? endif ?>
+<?
 
 $bodyHTML = ob_get_clean();
 /**
@@ -36,25 +36,25 @@ $bodyHTML = ob_get_clean();
 ob_start();
 
 ?>
-<?php echo t('Registration Approval Required') ?>
+<?= t('Registration Approval Required') ?>
 
-<?php echo t('A new user has registered on your website. This account must be approved before it is active and may login.') ?>
+<?= t('A new user has registered on your website. This account must be approved before it is active and may login.') ?>
 
-<?php echo t('User Name') ?>: <?php echo $uName ?>
+<?= t('User Name') ?>: <?= $uName ?>
 
-<?php echo t('Email Address') ?>: <?php echo $uEmail ?>
+<?= t('Email Address') ?>: <?= $uEmail ?>
 
-<?php if($attribs): ?>
-	<?php foreach($attribs as $item): ?>
-		<?php echo $item ?>
+<? if($attribs): ?>
+	<? foreach($attribs as $item): ?>
+		<?= $item ?>
 
-	<?php endforeach ?>
-<?php endif ?>
+	<? endforeach ?>
+<? endif ?>
 
-<?php echo t('You may approve or remove this user account here') ?>:
+<?= t('You may approve or remove this user account here') ?>:
 
-<?php echo View::url('/dashboard/users/search', 'view', $uID) ?>
-<?php
+<?= View::url('/dashboard/users/search', 'view', $uID) ?>
+<?
 
 $body = ob_get_clean();
 /**

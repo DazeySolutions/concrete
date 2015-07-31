@@ -1,18 +1,18 @@
-<?php
+<?
 defined('C5_EXECUTE') or die("Access Denied.");
 $cID = $c->getCollectionID();
 ?>
 
 <section class="ccm-ui">
-	<header><?php echo t('Composer - %s', $pagetype->getPageTypeDisplayName())?></header>
+	<header><?=t('Composer - %s', $pagetype->getPageTypeDisplayName())?></header>
 	<form method="post" data-panel-detail-form="compose">
-		<?php echo Loader::helper('concrete/ui/help')->display('panel', '/page/composer')?>
+		<?=Loader::helper('concrete/ui/help')->display('panel', '/page/composer')?>
 
-		<?php Loader::helper('concrete/composer')->display($pagetype, $c); ?>
+		<? Loader::helper('concrete/composer')->display($pagetype, $c); ?>
 	</form>
 
 	<div class="ccm-panel-detail-form-actions dialog-buttons">
-		<?php Loader::helper('concrete/composer')->displayButtons($pagetype, $c); ?>
+		<? Loader::helper('concrete/composer')->displayButtons($pagetype, $c); ?>
 	</div>
 </section>
 
@@ -30,7 +30,7 @@ ConcretePageComposerDetail = {
     		'beforeSubmit': function() {
     			my.saving = true;
     		},
-			url: '<?php echo $controller->action('autosave')?>',
+			url: '<?=$controller->action('autosave')?>',
 			success: function(r) {
 				my.saving = false;
 		        $('#ccm-page-type-composer-form-save-status').html(r.message).show();
@@ -58,8 +58,8 @@ ConcretePageComposerDetail = {
 	    $('button[data-page-type-composer-form-btn=discard]').on('click', function() {
 	    	my.disableAutosave();
 	    	$.concreteAjax({
-	    		'url': '<?php echo $controller->action('discard')?>',
-	    		'data': {cID: '<?php echo $cID?>'},
+	    		'url': '<?=$controller->action('discard')?>',
+	    		'data': {cID: '<?=$cID?>'},
 	    		success: function(r) {
 					window.location.href = r.redirectURL;
 	    		}
@@ -69,7 +69,7 @@ ConcretePageComposerDetail = {
 	    $('button[data-page-type-composer-form-btn=preview]').on('click', function() {
 	    	my.disableAutosave();
 	    	redirect = function () {
-	   			window.location.href = CCM_DISPATCHER_FILENAME + '?cID=<?php echo $cID?>&ctask=check-out&<?php echo Loader::helper('validation/token')->getParameter()?>';
+	   			window.location.href = CCM_DISPATCHER_FILENAME + '?cID=<?=$cID?>&ctask=check-out&<?=Loader::helper('validation/token')->getParameter()?>';
 	    	}
 	    	if (!my.saving) {
 	    		my.saveDraft(redirect);
@@ -82,7 +82,7 @@ ConcretePageComposerDetail = {
             my.disableAutosave();
             var submitSuccess = false;
             my.$form.concreteAjaxForm({
-                url: '<?php echo $controller->action('save_and_exit')?>',
+                url: '<?=$controller->action('save_and_exit')?>',
                 success: function(r) {
                     submitSuccess = true;
                     window.location.href = r.redirectURL;
@@ -100,7 +100,7 @@ ConcretePageComposerDetail = {
 	    	my.disableAutosave();
 	    	var submitSuccess = false;
 			my.$form.concreteAjaxForm({
-				url: '<?php echo $controller->action('publish')?>',
+				url: '<?=$controller->action('publish')?>',
 				success: function(r) {
                     submitSuccess = true;
 					window.location.href = r.redirectURL;

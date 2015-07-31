@@ -9,5 +9,5 @@ if (isset($css)) {
     $class = '';
 }
 if ($class !== '') {
-    ?><div class="<?php echo $class?>"><?php 
+    ?><div class="<?=$class?>"><?php 
 }

@@ -3,63 +3,63 @@
 $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
 ?>
 
-<h4><?php echo t('Recent Page Views')?></h4>
+<h4><?=t('Recent Page Views')?></h4>
 
 <table class="table" id="ccm-site-statistics-visits" style="display: none">
 <thead>
 <tr>
 	<td></td>
-	<?php foreach($pageViews as $day => $total) { ?>
-		<th><?php echo $day?></th>
-	<?php } ?>
+	<? foreach($pageViews as $day => $total) { ?>
+		<th><?=$day?></th>
+	<? } ?>
 </tr>
 </thead>
 <tbody>
 <tr>
-	<th><?php echo t('Page Views')?></th>
-	<?php foreach($pageViews as $total) { ?>
-		<td><?php echo $total?></td>
-	<?php } ?>
+	<th><?=t('Page Views')?></th>
+	<? foreach($pageViews as $total) { ?>
+		<td><?=$total?></td>
+	<? } ?>
 </tr>
 </table>
 
-<h4><?php echo t('Recent Registrations')?></h4>
+<h4><?=t('Recent Registrations')?></h4>
 
 <table class="table"  id="ccm-site-statistics-registrations" style="display: none">
 <thead>
 <tr>
 	<td></td>
-	<?php foreach($userRegistrations as $day => $total) { ?>
-		<th><?php echo $day?></th>
-	<?php } ?>
+	<? foreach($userRegistrations as $day => $total) { ?>
+		<th><?=$day?></th>
+	<? } ?>
 </tr>
 </thead>
 <tbody>
 <tr>
-	<th><?php echo t('User Registrations')?></th>
-	<?php foreach($userRegistrations as $total) { ?>
-		<td><?php echo $total?></td>
-	<?php } ?>
+	<th><?=t('User Registrations')?></th>
+	<? foreach($userRegistrations as $total) { ?>
+		<td><?=$total?></td>
+	<? } ?>
 </tr>
 </table>
 
-<h4><?php echo t('Pages Created')?></h4>
+<h4><?=t('Pages Created')?></h4>
 
 <table class="table"  id="ccm-site-statistics-new-pages" style="display: none">
 <thead>
 <tr>
 	<td></td>
-	<?php foreach($newPages as $day => $total) { ?>
-		<th><?php echo $day?></th>
-	<?php } ?>
+	<? foreach($newPages as $day => $total) { ?>
+		<th><?=$day?></th>
+	<? } ?>
 </tr>
 </thead>
 <tbody>
 <tr>
-	<th><?php echo t('Pages Created')?></th>
-	<?php foreach($newPages as $total) { ?>
-		<td><?php echo $total?></td>
-	<?php } ?>
+	<th><?=t('Pages Created')?></th>
+	<? foreach($newPages as $total) { ?>
+		<td><?=$total?></td>
+	<? } ?>
 </tr>
 </table>
 
@@ -69,23 +69,23 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 
 <br/><br/>
 
-<h4><?php echo t('Five Most Recent Downloads')?></h4>
+<h4><?=t('Five Most Recent Downloads')?></h4>
 
 <table class="table"  id="ccm-site-statistics-downloads">
 <thead>
 <tr>
-	<th><?php echo t('File')?></th>
-	<th><?php echo t('User')?></th>
-	<th><?php echo t('Downloaded On')?></th>
+	<th><?=t('File')?></th>
+	<th><?=t('User')?></th>
+	<th><?=t('Downloaded On')?></th>
 </tr>
 </thead>
 <tbody>
-<?php if (count($downloads) == 0) { ?>
+<? if (count($downloads) == 0) { ?>
 	<tr>
-		<td colspan="3" style="text-align: center"><?php echo t('No files have been downloaded.')?></td>
+		<td colspan="3" style="text-align: center"><?=t('No files have been downloaded.')?></td>
 	</tr>
-<?php } else { ?>
-<?php
+<? } else { ?>
+<?
 	foreach($downloads as $download) {
 		$f = File::getByID($download['fID']);
 		if (!is_object($f)) {
@@ -93,7 +93,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 		}
 		?>
 	<tr>
-		<td class='ccm-site-statistics-downloads-title'><a href="<?php echo $f->getDownloadURL()?>" title="<?php echo $f->getTitle();?>"><?php
+		<td class='ccm-site-statistics-downloads-title'><a href="<?=$f->getDownloadURL()?>" title="<?=$f->getTitle();?>"><?php
 		$title = $f->getTitle();
 		$maxlen = 20;
 		if (strlen($title) > ($maxlen-4)) {
@@ -104,7 +104,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 		echo $title;
 		?></a></td>
 		<td>
-			<?php
+			<?
 			$uID=intval($download['uID']);
 			if(!$uID){
 				echo t('Anonymous');
@@ -118,10 +118,10 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 			}
 			?>
 		</td>
-		<td><?php echo $dh->formatDateTime($download['timestamp'])?></td>
+		<td><?=$dh->formatDateTime($download['timestamp'])?></td>
 	</tr>
-	<?php } ?>
-<?php } ?>
+	<? } ?>
+<? } ?>
 </table>
 
 <script type="text/javascript">

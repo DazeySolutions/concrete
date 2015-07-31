@@ -25,17 +25,17 @@ defined('C5_EXECUTE') or die("Access Denied.");
         ));
         ?>
         <h4>
-            <?php echo $type->getName() ?>
-            <small><?php echo t('%s x %s dimensions', $width, $height) ?></small>
-            <?php if ($fp->canEditFileContents() && $hasFile) { ?>
-                <a href="<?php echo $url . '?' . $query ?>"
+            <?= $type->getName() ?>
+            <small><?= t('%s x %s dimensions', $width, $height) ?></small>
+            <? if ($fp->canEditFileContents() && $hasFile) { ?>
+                <a href="<?= $url . '?' . $query ?>"
                    dialog-width="90%"
                    dialog-height="70%"
                    class="pull-right btn btn-sm btn-default dialog-launch"
-                   dialog-title="<?php echo t('Edit Thumbnail Images') ?>">
-                    <?php echo t('Edit Thumbnail') ?>
+                   dialog-title="<?= t('Edit Thumbnail Images') ?>">
+                    <?= t('Edit Thumbnail') ?>
                 </a>
-            <?php } ?>
+            <? } ?>
         </h4>
         <hr/>
         <div class="ccm-file-manager-image-thumbnail">
@@ -43,11 +43,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
             if ($hasFile) {
                 ?>
                 <img class="ccm-file-manager-image-thumbnail-image"
-                     data-handle='<?php echo $type->getHandle() ?>'
-                     data-fid="<?php echo $version->getFileID() ?>"
-                     data-fvid="<?php echo $version->getFileVersionID() ?>"
+                     data-handle='<?= $type->getHandle() ?>'
+                     data-fid="<?= $version->getFileID() ?>"
+                     data-fvid="<?= $version->getFileVersionID() ?>"
                      style="max-width: 100%"
-                     src="<?php echo $configuration->getPublicURLToFile($thumbnailPath) ?>"/>
+                     src="<?= $configuration->getPublicURLToFile($thumbnailPath) ?>"/>
             <?php
             } else {
                 echo t(
@@ -57,7 +57,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
             ?>
         </div>
 
-    <?php } ?>
+    <? } ?>
 
     <script>
         (function() {

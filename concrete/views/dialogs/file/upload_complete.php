@@ -1,35 +1,35 @@
-<?php
+<?
 defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 
 <div class="ccm-ui" id="ccm-file-manager-upload-complete">
 	<div class="alert alert-success">
-		<?php echo t2('%s file uploaded', '%s files uploaded', count($files))?>
-		<button data-action="choose-file" style="display: none" type="button" class="pull-right btn btn-success btn-xs"><?php echo t2('Choose file', 'Choose files', count($files))?></button>
+		<?=t2('%s file uploaded', '%s files uploaded', count($files))?>
+		<button data-action="choose-file" style="display: none" type="button" class="pull-right btn btn-success btn-xs"><?=t2('Choose file', 'Choose files', count($files))?></button>
 
 	</div>
 	<fieldset>
-		<legend><?php echo t('Properties')?></legend>
-		<?php if (count($files) > 1) { ?>
-			<p><?php echo t('Properties like name, description and tags are unavailable when uploading multiple files.')?></p>
-		<?php } else { ?>
+		<legend><?=t('Properties')?></legend>
+		<? if (count($files) > 1) { ?>
+			<p><?=t('Properties like name, description and tags are unavailable when uploading multiple files.')?></p>
+		<? } else { ?>
 			<div data-container="editable-core-properties">
-				<?php Loader::element('files/properties', array('fv' =>  $files[0]->getVersion(), 'mode' => 'bulk'))?>
+				<? Loader::element('files/properties', array('fv' =>  $files[0]->getVersion(), 'mode' => 'bulk'))?>
 			</div>
-		<?php } ?>
+		<? } ?>
 	</fieldset>
 	<fieldset>
-		<legend><?php echo t('Sets')?>
-			<button type="button" data-action="manage-file-sets" class="btn btn-xs pull-right btn-default"><?php echo t('Add/Remove Sets')?></button>
+		<legend><?=t('Sets')?>
+			<button type="button" data-action="manage-file-sets" class="btn btn-xs pull-right btn-default"><?=t('Add/Remove Sets')?></button>
 		</legend>
 
 		<section data-container="file-set-list"></section>
 	</fieldset>
 
 	<fieldset data-container="editable-attributes">
-		<legend><?php echo t('Custom Attributes')?></legend>
+		<legend><?=t('Custom Attributes')?></legend>
 		<section>
-			<?php
+			<?
 			Loader::element('attribute/editable_list', array(
 				'attributes' => $attributes,
 				'objects' => $files,
@@ -50,7 +50,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			<div><%-fileset.fsDisplayName%></div>
 		<% }) %>
 	<% } else { %>
-		<p><?php echo t('None')?></p>
+		<p><?=t('None')?></p>
 	<% } %>
 </script>
 
@@ -58,29 +58,29 @@ defined('C5_EXECUTE') or die("Access Denied.");
 $(function() {
 
 	var _sets = _.template($('script.upload-complete-file-sets').html());
-	var filesets = <?php echo json_encode($filesets)?>;
-	var fID = <?php echo json_encode($fileIDs)?>;
+	var filesets = <?=json_encode($filesets)?>;
+	var fID = <?=json_encode($fileIDs)?>;
 
-	<?php if (count($files) == 1) { ?>
+	<? if (count($files) == 1) { ?>
 		$('[data-container=editable-core-properties]').concreteEditableFieldContainer({
 			data: [
-				<?php foreach($files as $f) { ?>
-				{'name': 'fID[]', 'value': '<?php echo $f->getFileID()?>'},
-				<?php } ?>
+				<? foreach($files as $f) { ?>
+				{'name': 'fID[]', 'value': '<?=$f->getFileID()?>'},
+				<? } ?>
 			],
-			url: '<?php echo $propertiesController->action('save')?>'
+			url: '<?=$propertiesController->action('save')?>'
 		});
-	<?php } ?>
+	<? } ?>
 	$('[data-container=editable-attributes]').concreteEditableFieldContainer({
 		data: [
-			<?php foreach($files as $f) { ?>
-			{'name': 'fID[]', 'value': '<?php echo $f->getFileID()?>'},
-			<?php } ?>
+			<? foreach($files as $f) { ?>
+			{'name': 'fID[]', 'value': '<?=$f->getFileID()?>'},
+			<? } ?>
 		]
 	});
 
 	$('button[data-action=manage-file-sets]').on('click', function() {
-		<?php
+		<?
 		$data = '';
 		for ($i = 0; $i < count($files); $i++) {
 			$f = $files[$i];
@@ -95,7 +95,7 @@ $(function() {
 			height: '400',
 			href: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/file/bulk/sets',
 			modal: true,
-			data: '<?php echo $data?>',
+			data: '<?=$data?>',
 			title: ccmi18n_filemanager.sets
 		});
 	});
@@ -106,8 +106,14 @@ $(function() {
 	});
 
 	ConcreteEvent.subscribe('FileManagerUploadCompleteDialogOpen', function(e, data) {
-		if (data.filemanager.options.mode == 'choose') {
+		if (data.filemanager && data.filemanager.options.mode == 'choose') {
 			$('button[data-action=choose-file]').show();
+		}
+	});
+
+	ConcreteEvent.subscribe('FileManagerUploadCompleteDialogClose', function(e, data) {
+		if (data.filemanager) {
+			data.filemanager.refreshResults();
 		}
 	});
 

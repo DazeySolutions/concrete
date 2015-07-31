@@ -18,7 +18,7 @@ if ($_POST['task'] == 'delete_pages') {
 	if ($_POST['process']) {
 		$obj = new stdClass;
 		$js = Loader::helper('json');
-		$messages = $q->receive(Config::get('concrete.limits.sitemap_pages'));
+		$messages = $q->receive(Config::get('concrete.limits.delete_pages'));
 		foreach($messages as $key => $p) {
 			// delete the page here
 			$page = unserialize($p->body);
@@ -78,34 +78,34 @@ foreach($pages as $c) {
 ?>
 <div class="ccm-ui">
 
-<?php if ($pcnt == 0) { ?>
-	<?php echo t("You do not have permission to delete any of the selected pages."); ?>
-<?php } else { ?>
+<? if ($pcnt == 0) { ?>
+	<?=t("You do not have permission to delete any of the selected pages."); ?>
+<? } else { ?>
 
-	<?php echo t('Are you sure you want to delete the following pages?')?><br/><br/>
+	<?=t('Are you sure you want to delete the following pages?')?><br/><br/>
 
-	<form data-action="delete-bulk-pages" method="post" action="<?php echo REL_DIR_FILES_TOOLS_REQUIRED?>/pages/delete">
-	<?php echo $form->hidden('task', 'delete_pages')?>
+	<form data-action="delete-bulk-pages" method="post" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/delete">
+	<?=$form->hidden('task', 'delete_pages')?>
 	<table border="0" cellspacing="0" cellpadding="0" width="100%" class="table table-striped">
 	<tr>
-		<th><?php echo t('Name')?></th>
-		<th><?php echo t('Page Type')?></th>
-		<th><?php echo t('Date Added')?></th>
-		<th><?php echo t('Author')?></th>
+		<th><?=t('Name')?></th>
+		<th><?=t('Page Type')?></th>
+		<th><?=t('Date Added')?></th>
+		<th><?=t('Author')?></th>
 	</tr>
 
-	<?php foreach($pages as $c) {
+	<? foreach($pages as $c) {
 		$cp = new Permissions($c);
 		$c->loadVersionObject();
 		if ($cp->canDeletePage() && $c->getCollectionID() > 1) { ?>
 
-		<?php echo $form->hidden('cID[]', $c->getCollectionID())?>
+		<?=$form->hidden('cID[]', $c->getCollectionID())?>
 
 		<tr>
-			<td class="ccm-page-list-name"><?php echo $c->getCollectionName()?></td>
-			<td><?php echo $c->getPageTypeName()?></td>
-			<td><?php echo $dh->formatDateTime($c->getCollectionDatePublic())?></td>
-			<td><?php
+			<td class="ccm-page-list-name"><?=$c->getCollectionName()?></td>
+			<td><?=$c->getPageTypeName()?></td>
+			<td><?=$dh->formatDateTime($c->getCollectionDatePublic())?></td>
+			<td><?
 				$ui = UserInfo::getByID($c->getCollectionUserID());
 				if (is_object($ui)) {
 					print $ui->getUserName();
@@ -114,7 +114,7 @@ foreach($pages as $c) {
 
 		</tr>
 
-		<?php }  ?>
+		<? }  ?>
 	</table>
 	</form>
 
@@ -129,19 +129,19 @@ foreach($pages as $c) {
                 function() {
                     jQuery.fn.dialog.closeAll();
                     ConcreteEvent.publish('SitemapDeleteRequestComplete');
-                    ConcreteAlert.notify({message: '<?php echo t('Pages deleted successfully.')?>'});
+                    ConcreteAlert.notify({message: '<?=t('Pages deleted successfully.')?>'});
                 }
             );
         }
     </script>
 
 	<div class="dialog-buttons">
-	<?php $ih = Loader::helper('concrete/ui')?>
-	<?php echo $ih->button_js(t('Cancel'), 'jQuery.fn.dialog.closeTop()', 'left', 'btn')?>
-	<?php echo $ih->button_js(t('Delete'), 'ccm_sitemapDeletePages()', 'right', 'btn btn-danger')?>
+	<? $ih = Loader::helper('concrete/ui')?>
+	<?=$ih->button_js(t('Cancel'), 'jQuery.fn.dialog.closeTop()', 'left', 'btn')?>
+	<?=$ih->button_js(t('Delete'), 'ccm_sitemapDeletePages()', 'right', 'btn btn-danger')?>
 	</div>
 
-	<?php
+	<?
 
 }
 ?>

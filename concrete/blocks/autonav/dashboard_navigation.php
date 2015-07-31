@@ -1,4 +1,4 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
+<? defined('C5_EXECUTE') or die("Access Denied.");
 
 $navItems = $controller->getNavItems();
 $c = Page::getCurrentPage();

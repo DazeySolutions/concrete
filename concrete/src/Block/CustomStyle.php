@@ -10,12 +10,22 @@ class CustomStyle extends AbstractCustomStyle
     protected $arHandle;
     protected $bID;
     protected $set;
+    protected $theme;
+    protected $bFilename;
 
-    public function __construct(StyleSet $set = null, $bID, $arHandle)
+    public function __construct(StyleSet $set = null, Block $b, $theme = null)
     {
-        $this->arHandle = $arHandle;
-        $this->bID = $bID;
+        $this->arHandle = $b->getAreaHandle();
+        $this->bID = $b->getBlockID();
         $this->set = $set;
+        $this->theme = $theme;
+        $this->bFilename = $b->getBlockFilename();
+    }
+
+    public function getStyleWrapper($css)
+    {
+        $style = '<style type="text/css" data-area-style-area-handle="' . $this->arHandle . '" data-block-style-block-id="' . $this->bID . '" data-style-set="' . $this->getStyleSet()->getID() . '">' . $css . '</style>';
+        return $style;
     }
 
     public function getCSS()
@@ -107,8 +117,17 @@ class CustomStyle extends AbstractCustomStyle
         $txt = Core::make('helper/text');
         $class .= strtolower($txt->filterNonAlphaNum($this->arHandle));
         $class .= '-' . $this->bID;
-        if (is_object($this->set) && $this->set->getCustomClass()) {
-            $class .= ' ' . $this->set->getCustomClass();
+        if (isset($this->bFilename) && $this->bFilename) {
+            $template = $this->bFilename;
+            $template = str_replace('.php', '', $template);
+            $template = str_replace('_', '-', $template);
+            $class .= ' ccm-block-custom-template-' . $template;
+        }
+        if (is_object($this->set)) {
+            $return = $this->set->getClass($this->theme);
+            if ($return) {
+                $class .= ' ' . $return;
+            }
         }
         return $class;
     }

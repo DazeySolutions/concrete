@@ -7,27 +7,27 @@ if (!isset($mode) || !$mode) {
     $mode = 'single';
 }
 ?>
-<?php if ($mode == 'single') { ?>
+<? if ($mode == 'single') { ?>
 <div class="row">
-    <div class="col-md-3"><p><?php echo t('ID') ?></p></div>
-    <div class="col-md-9"><p><?php echo $fv->getFileID() ?> <span style="color: #afafaf">(<?php echo t(
-                    'Version') ?> <?php echo $fv->getFileVersionID() ?>)</p></div>
+    <div class="col-md-3"><p><?= t('ID') ?></p></div>
+    <div class="col-md-9"><p><?= $fv->getFileID() ?> <span style="color: #afafaf">(<?= t(
+                    'Version') ?> <?= $fv->getFileVersionID() ?>)</p></div>
 </div>
 <div class="row">
-    <div class="col-md-3"><p><?php echo t('Filename') ?></p></div>
-    <div class="col-md-9"><p><?php echo h($fv->getFileName()) ?></p></div>
+    <div class="col-md-3"><p><?= t('Filename') ?></p></div>
+    <div class="col-md-9"><p><?= h($fv->getFileName()) ?></p></div>
 </div>
-<?php } ?>
+<? } ?>
 
-<?php
+<?
 $url = $fv->getURL();
 ?>
 <div class="row">
-    <div class="col-md-3"><p><?php echo t('URL to File') ?></p></div>
-    <div class="col-md-9"><p style="overflow: hidden"><?php echo $url ?></p></div>
+    <div class="col-md-3"><p><?= t('URL to File') ?></p></div>
+    <div class="col-md-9"><p style="overflow: hidden"><?= $url ?></p></div>
 </div>
-<?php if ($mode == 'single') { ?>
-    <?php
+<? if ($mode == 'single') { ?>
+    <?
     $oc = $f->getOriginalPageObject();
     if (is_object($oc)) {
         $fileManager = Page::getByPath('/dashboard/files/search');
@@ -39,34 +39,34 @@ $url = $fv->getURL();
         }
         ?>
         <div class="row">
-            <div class="col-md-3"><p><?php echo t('Page Added To') ?></p></div>
-            <div class="col-md-9"><p><a href="<?php echo Loader::helper('navigation')->getLinkToCollection($oc) ?>"
-                                        target="_blank"><?php echo $ocName ?></a></p></div>
+            <div class="col-md-3"><p><?= t('Page Added To') ?></p></div>
+            <div class="col-md-9"><p><a href="<?= Loader::helper('navigation')->getLinkToCollection($oc) ?>"
+                                        target="_blank"><?= $ocName ?></a></p></div>
         </div>
-    <?php } ?>
+    <? } ?>
 
     <div class="row">
-        <div class="col-md-3"><p><?php echo t('Type') ?></p></div>
-        <div class="col-md-9"><p><?php echo $fv->getType() ?></p></div>
+        <div class="col-md-3"><p><?= t('Type') ?></p></div>
+        <div class="col-md-9"><p><?= $fv->getType() ?></p></div>
     </div>
 
-<?php } ?>
+<? } ?>
 
-<?php if ($fv->getTypeObject()->getGenericType() == \Concrete\Core\File\Type\Type::T_IMAGE) {
+<? if ($fv->getTypeObject()->getGenericType() == \Concrete\Core\File\Type\Type::T_IMAGE) {
     try {
         $thumbnails = $fv->getThumbnails();
     } catch (InvalidDimensionException $e) {
         ?>
         <div class="row">
 
-            <div class="col-md-3"><p><?php echo t('Thumbnails') ?></p></div>
+            <div class="col-md-3"><p><?= t('Thumbnails') ?></p></div>
             <div class="col-md-9">
                 <p style="color:#cc3333">
-                    <?php echo t('Invalid file dimensions, please rescan this file.') ?>
-                    <?php if ($mode != 'preview' && $fp->canEditFileContents()) { ?>
+                    <?= t('Invalid file dimensions, please rescan this file.') ?>
+                    <? if ($mode != 'preview' && $fp->canEditFileContents()) { ?>
                         <a href="#" class="btn pull-right btn-default btn-xs"
-                           data-action="rescan"><?php echo t('Rescan') ?></a>
-                    <?php } ?>
+                           data-action="rescan"><?= t('Rescan') ?></a>
+                    <? } ?>
                 </p>
             </div>
         </div>
@@ -75,14 +75,14 @@ $url = $fv->getURL();
         ?>
         <div class="row">
 
-            <div class="col-md-3"><p><?php echo t('Thumbnails') ?></p></div>
+            <div class="col-md-3"><p><?= t('Thumbnails') ?></p></div>
             <div class="col-md-9">
                 <p style="color:#cc3333">
-                    <?php echo t('Unknown error retrieving thumbnails, please rescan this file.') ?>
-                    <?php if ($mode != 'preview' && $fp->canEditFileContents()) { ?>
+                    <?= t('Unknown error retrieving thumbnails, please rescan this file.') ?>
+                    <? if ($mode != 'preview' && $fp->canEditFileContents()) { ?>
                         <a href="#" class="btn pull-right btn-default btn-xs"
-                           data-action="rescan"><?php echo t('Rescan') ?></a>
-                    <?php } ?>
+                           data-action="rescan"><?= t('Rescan') ?></a>
+                    <? } ?>
                 </p>
             </div>
         </div>
@@ -91,59 +91,59 @@ $url = $fv->getURL();
     if ($thumbnails) {
         ?>
         <div class="row">
-            <div class="col-md-3"><p><?php echo t('Thumbnails') ?></p></div>
+            <div class="col-md-3"><p><?= t('Thumbnails') ?></p></div>
             <div class="col-md-9"><p><a class="dialog-launch icon-link"
-                                        dialog-title="<?php echo t('Thumbnail Images') ?>"
-                                        dialog-width="90%" dialog-height="70%" href="<?php echo URL::to(
-                        '/ccm/system/dialogs/file/thumbnails') ?>?fID=<?php echo $fv->getFileID() ?>&fvID=<?php echo $fv->getFileVersionID() ?>"><?php echo count(
+                                        dialog-title="<?= t('Thumbnail Images') ?>"
+                                        dialog-width="90%" dialog-height="70%" href="<?= URL::to(
+                        '/ccm/system/dialogs/file/thumbnails') ?>?fID=<?= $fv->getFileID() ?>&fvID=<?= $fv->getFileVersionID() ?>"><?= count(
                             $thumbnails) ?> <i class="fa fa-edit"></i></a></p></div>
         </div>
-    <?php
+    <?
     }
 }
 ?>
-<?php if ($mode == 'single') { ?>
+<? if ($mode == 'single') { ?>
 
     <div class="row">
-        <div class="col-md-3"><p><?php echo t('Size') ?></p></div>
-        <div class="col-md-9"><p><?php echo $fv->getSize() ?> (<?php echo t2(/*i18n: %s is a number */
+        <div class="col-md-3"><p><?= t('Size') ?></p></div>
+        <div class="col-md-9"><p><?= $fv->getSize() ?> (<?= t2(/*i18n: %s is a number */
                     '%s byte',
                     '%s bytes',
                     $fv->getFullSize(),
                     Loader::helper('number')->format($fv->getFullSize())) ?>)</p></div>
     </div>
     <div class="row">
-        <div class="col-md-3"><p><?php echo t('Date Added') ?></p></div>
-        <div class="col-md-9"><p><?php echo t(
+        <div class="col-md-3"><p><?= t('Date Added') ?></p></div>
+        <div class="col-md-9"><p><?= t(
                     'Added by <strong>%s</strong> on %s',
                     $fv->getAuthorName(),
                     $dh->formatDateTime($f->getDateAdded(), true)) ?></p></div>
     </div>
-    <?php
+    <?
     $fsl = $f->getFileStorageLocationObject();
     if (is_object($fsl)) { ?>
         <div class="row">
-            <div class="col-md-3"><p><?php echo t('Storage Location') ?></p></div>
-            <div class="col-md-9"><p><?php echo $fsl->getDisplayName() ?></div>
+            <div class="col-md-3"><p><?= t('Storage Location') ?></p></div>
+            <div class="col-md-9"><p><?= $fsl->getDisplayName() ?></div>
         </div>
-    <?php } ?>
-<?php } ?>
+    <? } ?>
+<? } ?>
 <div class="row">
-    <div class="col-md-3"><p><?php echo t('Title') ?></p></div>
+    <div class="col-md-3"><p><?= t('Title') ?></p></div>
     <div class="col-md-9"><p><span
-                <?php if ($fp->canEditFileProperties()) { ?>data-editable-field-type="xeditable"
-                data-type="text" data-name="fvTitle"<?php } ?>><?php echo h($fv->getTitle()) ?></span></p></div>
+                <? if ($fp->canEditFileProperties()) { ?>data-editable-field-type="xeditable"
+                data-type="text" data-name="fvTitle"<? } ?>><?= h($fv->getTitle()) ?></span></p></div>
 </div>
 <div class="row">
-    <div class="col-md-3"><p><?php echo t('Description') ?></p></div>
+    <div class="col-md-3"><p><?= t('Description') ?></p></div>
     <div class="col-md-9"><p><span
-                <?php if ($fp->canEditFileProperties()) { ?>data-editable-field-type="xeditable"
-                data-type="textarea" data-name="fvDescription"<?php } ?>><?php echo h(
+                <? if ($fp->canEditFileProperties()) { ?>data-editable-field-type="xeditable"
+                data-type="textarea" data-name="fvDescription"<? } ?>><?= h(
                     $fv->getDescription()) ?></span></p></div>
 </div>
 <div class="row">
-    <div class="col-md-3"><p><?php echo t('Tags') ?></p></div>
+    <div class="col-md-3"><p><?= t('Tags') ?></p></div>
     <div class="col-md-9"><p><span
-                <?php if ($fp->canEditFileProperties()) { ?>data-editable-field-type="xeditable"
-                data-type="textarea" data-name="fvTags"<?php } ?>><?php echo h($fv->getTags()) ?></span></p></div>
+                <? if ($fp->canEditFileProperties()) { ?>data-editable-field-type="xeditable"
+                data-type="textarea" data-name="fvTags"<? } ?>><?= h($fv->getTags()) ?></span></p></div>
 </div>

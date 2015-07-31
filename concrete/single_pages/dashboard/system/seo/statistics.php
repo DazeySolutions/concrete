@@ -1,12 +1,12 @@
 <?php defined('C5_EXECUTE') or die('Access Denied');
 $form = Loader::helper('form'); ?>
 	<form method="post" id="url-form" action="<?php echo $view->action('')?>">
-		<?php echo $this->controller->token->output('update_statistics')?>
+		<?=$this->controller->token->output('update_statistics')?>
         <div class="form-group">
             <div class="checkbox">
                 <label>
-                <?php echo $form->checkbox('STATISTICS_TRACK_PAGE_VIEWS', 1, STATISTICS_TRACK_PAGE_VIEWS); ?>
-                <span><?php echo t('Track page view statistics.');?></span>
+                <?=$form->checkbox('STATISTICS_TRACK_PAGE_VIEWS', 1, $STATISTICS_TRACK_PAGE_VIEWS); ?>
+                <span><?=t('Track page view statistics.');?></span>
                 </label>
             </div>
         </div>

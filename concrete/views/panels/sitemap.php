@@ -1,19 +1,19 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<? defined('C5_EXECUTE') or die("Access Denied."); ?>
 <div class="ccm-panel-content-inner">
 
-<?php if (count($frequentPageTypes) || count($otherPageTypes)) {?>
-	<h5><?php echo t('New Page')?></h5>
+<? if (count($frequentPageTypes) || count($otherPageTypes)) {?>
+	<h5><?=t('New Page')?></h5>
 	<ul class="ccm-panel-sitemap-list">
-	<?php foreach($frequentPageTypes as $pt) { ?>
-		<li><a href="<?php echo URL::to('/ccm/system/page/', 'create', $pt->getPageTypeID())?>"><?php echo $pt->getPageTypeDisplayName()?></a></li>
-	<?php } ?>
-    <?php foreach($otherPageTypes as $pt) { ?>
-        <li data-page-type="other" <?php if (count($frequentPageTypes)) { ?>style="display: none"<?php } ?>><a href="<?php echo URL::to('/ccm/system/page/', 'create', $pt->getPageTypeID())?>"><?php echo $pt->getPageTypeDisplayName()?></a></li>
-    <?php } ?>
+	<? foreach($frequentPageTypes as $pt) { ?>
+		<li><a href="<?=URL::to('/ccm/system/page/', 'create', $pt->getPageTypeID())?>"><?=$pt->getPageTypeDisplayName()?></a></li>
+	<? } ?>
+    <? foreach($otherPageTypes as $pt) { ?>
+        <li data-page-type="other" <? if (count($frequentPageTypes)) { ?>style="display: none"<? } ?>><a href="<?=URL::to('/ccm/system/page/', 'create', $pt->getPageTypeID())?>"><?=$pt->getPageTypeDisplayName()?></a></li>
+    <? } ?>
 
-    <?php if (count($frequentPageTypes) && count($otherPageTypes)) { ?>
-        <li class="ccm-panel-sitemap-more-page-types"><a href="#" data-sitemap="show-more"><i class="fa fa-caret-down"></i> <?php echo t('More')?></a></li>
-    <?php } ?>
+    <? if (count($frequentPageTypes) && count($otherPageTypes)) { ?>
+        <li class="ccm-panel-sitemap-more-page-types"><a href="#" data-sitemap="show-more"><i class="fa fa-caret-down"></i> <?=t('More')?></a></li>
+    <? } ?>
 	</ul>
 
     <script type="text/javascript">
@@ -24,11 +24,11 @@
         });
     });
     </script>
-<?php } ?>
+<? } ?>
 
-<?php
+<?
 if ($canViewSitemap) { ?>	
-	<h5><?php echo t('Sitemap')?></h5>
+	<h5><?=t('Sitemap')?></h5>
 	<div id="ccm-sitemap-panel-sitemap"></div>
 	<script type="text/javascript">
 	$(function() {
@@ -39,23 +39,23 @@ if ($canViewSitemap) { ?>
 		});
 	});
 	</script>
-<?php } ?>
+<? } ?>
 
-<?php if (count($drafts)) {?>
-	<h5><?php echo t('Page Drafts')?></h5>
+<? if (count($drafts)) {?>
+	<h5><?=t('Page Drafts')?></h5>
 	<ul class="ccm-panel-sitemap-list">
-	<?php foreach($drafts as $dc) { 
+	<? foreach($drafts as $dc) { 
 		?> 
-		<li><a href="<?php echo Loader::helper('navigation')->getLinkToCollection($dc)?>"><?php
+		<li><a href="<?=Loader::helper('navigation')->getLinkToCollection($dc)?>"><?
 			if ($dc->getCollectionName()) {
 				print $dc->getCollectionName();
 			} else {
 				print t('(Untitled)');
 			}
 		?></a></li>
-	<?php } ?>
+	<? } ?>
 	</ul>
-	<?php } ?>
+	<? } ?>
 
 </div>
 

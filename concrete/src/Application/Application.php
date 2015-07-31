@@ -1,9 +1,11 @@
 <?php
+
 namespace Concrete\Core\Application;
 
 use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Cache\Page\PageCache;
 use Concrete\Core\Cache\Page\PageCacheRecord;
+use Concrete\Core\Cache\OpCache;
 use Concrete\Core\Foundation\ClassLoader;
 use Concrete\Core\Foundation\EnvironmentDetector;
 use Concrete\Core\Localization\Localization;
@@ -20,12 +22,11 @@ use Environment;
 use Illuminate\Container\Container;
 use Job;
 use JobSet;
-use Loader;
 use Log;
 use Package;
 use Page;
 use Redirect;
-use \Concrete\Core\Http\Request;
+use Concrete\Core\Http\Request;
 use Route;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -36,12 +37,12 @@ use View;
 
 class Application extends Container
 {
-
     protected $installed = null;
     protected $environment = null;
 
     /**
      * Turns off the lights.
+     *
      * @param array $options Array of options for disabling certain things during shutdown
      *      Add `'jobs' => true` to disable scheduled jobs
      *      Add `'log_queries' => true` to disable query logging
@@ -71,7 +72,6 @@ class Application extends Container
                     }
 
                     $logger->write($loggers);
-
                 }
             }
 
@@ -98,11 +98,13 @@ class Application extends Container
         Core::make('cache')->flush();
         Core::make('cache/expensive')->flush();
 
-        // flush the CSS cache
-        if (is_dir(DIR_FILES_CACHE . '/' . DIRNAME_CSS)) {
-            $fh = Loader::helper("file");
-            $fh->removeAll(DIR_FILES_CACHE . '/' . DIRNAME_CSS);
+        // Delete and re-create the cache directory
+        $cacheDir = Config::get('concrete.cache.directory');
+        if (is_dir($cacheDir)) {
+            $fh = Core::make('helper/file');
+            $fh->removeAll($cacheDir, true);
         }
+        $this->setupFilesystem();
 
         $pageCache = PageCache::getLibrary();
         if (is_object($pageCache)) {
@@ -118,6 +120,9 @@ class Application extends Container
 
         // clear block type cache
         BlockType::clearCache();
+
+        // Clear precompiled script bytecode caches
+        OpCache::clear();
     }
 
     /**
@@ -175,7 +180,7 @@ class Application extends Container
     }
 
     /**
-     * Returns true if concrete5 is installed, false if it has not yet been
+     * Returns true if concrete5 is installed, false if it has not yet been.
      */
     public function isInstalled()
     {
@@ -191,7 +196,7 @@ class Application extends Container
     }
 
     /**
-     * Checks to see whether we should deliver a concrete5 response from the page cache
+     * Checks to see whether we should deliver a concrete5 response from the page cache.
      */
     public function checkPageCache(\Concrete\Core\Http\Request $request)
     {
@@ -204,6 +209,7 @@ class Application extends Container
                 }
             }
         }
+
         return false;
     }
 
@@ -260,7 +266,7 @@ class Application extends Container
     }
 
     /**
-     * Ensure we have a cache directory
+     * Ensure we have a cache directory.
      */
     public function setupFilesystem()
     {
@@ -271,11 +277,10 @@ class Application extends Container
     }
 
     /**
-     * Returns true if the app is run through the command line
+     * Returns true if the app is run through the command line.
      */
-    public function isRunThroughCommandLineInterface()
+    public static function isRunThroughCommandLineInterface()
     {
-
         return defined('C5_ENVIRONMENT_ONLY') && C5_ENVIRONMENT_ONLY || PHP_SAPI == 'cli';
     }
 
@@ -287,11 +292,15 @@ class Application extends Container
      */
     public function handleURLSlashes(SymfonyRequest $request)
     {
-        $url = Url::createFromUrl($request->getUri());
+        $parsedUrl = (string) Url::createFromUrl($request->getUri());
         if ($request->getPathInfo() != '/') {
-            if (urldecode((string) $url) != urldecode($request->getUri())) {
-                $response = new RedirectResponse((string) $url, 301);
+            $parsedUrlWithoutQueryString = strstr($parsedUrl, '?', true) ?: $parsedUrl;
+            $requestUrl = $request->getUri();
+            $requestUrlWithoutQueryString = strstr($requestUrl, '?', true) ?: $requestUrl;
+            if (urldecode($parsedUrlWithoutQueryString) != urldecode($requestUrlWithoutQueryString)) {
+                $response = new RedirectResponse($parsedUrl, 301);
                 $response->setRequest($request);
+
                 return $response;
             }
         }
@@ -299,6 +308,7 @@ class Application extends Container
 
     /**
      * If we have redirect to canonical host enabled, we need to honor it here.
+     *
      * @return \Concrete\Core\Routing\RedirectResponse
      */
     public function handleCanonicalURLRedirection(SymfonyRequest $r)
@@ -336,10 +346,10 @@ class Application extends Container
                 if ($new == $url) {
                     return null;
                 }
-
             }
 
             $response = new RedirectResponse($new, '301');
+
             return $response;
         }
     }
@@ -364,11 +374,12 @@ class Application extends Container
                 $route = $collection->get($matched['_route']);
                 Route::setRequest($request);
                 $response = Route::execute($route, $matched);
-            } catch(ResourceNotFoundException $e) {
+            } catch (ResourceNotFoundException $e) {
                 $callback = new DispatcherRouteCallback('dispatcher');
                 $response = $callback->execute($request);
             }
         }
+
         return $response;
     }
 
@@ -384,7 +395,7 @@ class Application extends Container
             if (!$valid) {
                 $isActive = $u->isActive();
                 $u->logout();
-                if($u->isError()) {
+                if ($u->isError()) {
                     switch ($u->getError()) {
                         case USER_SESSION_EXPIRED:
                             return Redirect::to('/login', 'session_invalidated')->send();
@@ -396,6 +407,7 @@ class Application extends Container
                     $v = new View('/frontend/user_error');
                     $v->setViewTheme('concrete');
                     $contents = $v->render();
+
                     return new Response($contents, 403);
                 }
             }
@@ -406,16 +418,14 @@ class Application extends Container
      * Get or check the current application environment.
      *
      * @param  mixed
+     *
      * @return string|bool
      */
     public function environment()
     {
-        if (count(func_get_args()) > 0)
-        {
+        if (count(func_get_args()) > 0) {
             return in_array($this->environment, func_get_args());
-        }
-        else
-        {
+        } else {
             return $this->environment;
         }
     }
@@ -424,13 +434,14 @@ class Application extends Container
      * Detect the application's current environment.
      *
      * @param  array|string|Callable  $environments
+     *
      * @return string
      */
     public function detectEnvironment($environments)
     {
         $r = Request::getInstance();
         $pos = stripos($r->server->get('SCRIPT_NAME'), DISPATCHER_FILENAME);
-        if($pos > 0) {
+        if ($pos > 0) {
             //we do this because in CLI circumstances (and some random ones) we would end up with index.ph instead of index.php
             $pos = $pos - 1;
         }
@@ -440,7 +451,7 @@ class Application extends Container
         $args = isset($_SERVER['argv']) ? $_SERVER['argv'] : null;
 
         $detector = new EnvironmentDetector();
+
         return $this->environment = $detector->detect($environments, $args);
     }
-
 }

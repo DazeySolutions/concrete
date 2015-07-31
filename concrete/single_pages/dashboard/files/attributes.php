@@ -1,25 +1,25 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
-<?php if (isset($key)) { ?>
+<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+<? if (isset($key)) { ?>
 
-<form method="post" action="<?php echo $view->action('edit')?>" id="ccm-attribute-key-form">
+<form method="post" action="<?=$view->action('edit')?>" id="ccm-attribute-key-form">
 
-<?php Loader::element("attribute/type_form_required", array('category' => $category, 'type' => $type, 'key' => $key)); ?>
+<? Loader::element("attribute/type_form_required", array('category' => $category, 'type' => $type, 'key' => $key)); ?>
 
 </form>
 
 
-<?php } else if ($this->controller->getTask() == 'select_type' || $this->controller->getTask() == 'add' || $this->controller->getTask() == 'edit') { ?>
+<? } else if ($this->controller->getTask() == 'select_type' || $this->controller->getTask() == 'add' || $this->controller->getTask() == 'edit') { ?>
 
-	<?php if (isset($type)) { ?>
-		<form method="post" action="<?php echo $view->action('add')?>" id="ccm-attribute-key-form">
+	<? if (isset($type)) { ?>
+		<form method="post" action="<?=$view->action('add')?>" id="ccm-attribute-key-form">
 	
-		<?php Loader::element("attribute/type_form_required", array('category' => $category, 'type' => $type)); ?>
+		<? Loader::element("attribute/type_form_required", array('category' => $category, 'type' => $type)); ?>
 	
 		</form>	
-	<?php } ?>
+	<? } ?>
 
 
-<?php } else {
+<? } else {
 	$attribs = FileAttributeKey::getList();
 	Loader::element('dashboard/attributes_table', array(
         'types' => $types,

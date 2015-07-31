@@ -3,26 +3,22 @@ $form = Loader::helper('form');
 ?>
 
 <form method='post'
-      action='<?php echo View::url('/login', 'authenticate', $this->getAuthenticationTypeHandle()) ?>'>
-    <div class="form-group concrete-login">
-        <span><?php echo t('Sign in with a local account.') ?> </span>
-        <hr>
-    </div>
+      action='<?= View::url('/login', 'authenticate', $this->getAuthenticationTypeHandle()) ?>'>
     <div class="form-group">
         <input name="uName" class="form-control col-sm-12"
-               placeholder="<?php echo Config::get('concrete.user.registration.email_registration') ? t('Email Address') : t('Username')?>" />
+               placeholder="<?=Config::get('concrete.user.registration.email_registration') ? t('Email Address') : t('Username')?>" />
     </div>
 
     <div class="form-group">
         <label>&nbsp;</label>
         <input name="uPassword" class="form-control" type="password"
-               placeholder="<?php echo t('Password')?>" />
+               placeholder="<?=t('Password')?>" />
     </div>
 
     <div class="checkbox">
         <label style="font-weight:normal">
             <input type="checkbox" name="uMaintainLogin" value="1">
-            <?php echo t('Stay signed in for two weeks') ?>
+            <?= t('Stay signed in for two weeks') ?>
         </label>
     </div>
 
@@ -30,16 +26,16 @@ $form = Loader::helper('form');
     if (isset($locales) && is_array($locales) && count($locales) > 0) {
         ?>
         <div class="form-group">
-            <label for="USER_LOCALE" class="control-label"><?php echo t('Language') ?></label>
-            <?php echo $form->select('USER_LOCALE', $locales) ?>
+            <label for="USER_LOCALE" class="control-label"><?= t('Language') ?></label>
+            <?= $form->select('USER_LOCALE', $locales) ?>
         </div>
-    <?php
+    <?
     }
     ?>
 
     <div class="form-group">
-        <button class="btn btn-primary"><?php echo t('Log in') ?></button>
-        <a href="<?php echo View::url('/login', 'concrete', 'forgot_password')?>" class="btn pull-right"><?php echo t('Forgot Password') ?></a>
+        <button class="btn btn-primary"><?= t('Log in') ?></button>
+        <a href="<?=View::url('/login', 'concrete', 'forgot_password')?>" class="btn pull-right"><?= t('Forgot Password') ?></a>
     </div>
 
     <script type="text/javascript">
@@ -47,9 +43,9 @@ $form = Loader::helper('form');
     </script>
     <?php Loader::helper('validation/token')->output('login_' . $this->getAuthenticationTypeHandle()); ?>
 
-    <?php if (Config::get('concrete.user.registration.enabled')) { ?>
+    <? if (Config::get('concrete.user.registration.enabled')) { ?>
         <br/>
         <hr/>
-        <a href="<?php echo URL::to('/register')?>" class="btn btn-block btn-success"><?php echo t('Not a member? Register')?></a>
-    <?php } ?>
+        <a href="<?=URL::to('/register')?>" class="btn btn-block btn-success"><?=t('Not a member? Register')?></a>
+    <? } ?>
 </form>

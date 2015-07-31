@@ -52,12 +52,12 @@ $show_graph = (count($optionNamesAbbrev) && !$_GET['dontGraphPoll'] && $totalVot
     <?php
     if ($controller->hasVoted()) {
         ?>
-        <h3><?php echo t("You've voted on this survey.") ?></h3>
+        <h3><?= t("You've voted on this survey.") ?></h3>
 
         <div class="row">
-            <div<?php echo $show_graph ? ' class="col-sm-9"' : '' ?>>
+            <div<?= $show_graph ? ' class="col-sm-9"' : '' ?>>
                 <div id="surveyQuestion">
-                    <strong><?php echo t("Question") ?>:</strong> <span><?php echo $controller->getQuestion() ?></span>
+                    <strong><?= t("Question") ?>:</strong> <span><?= $controller->getQuestion() ?></span>
                 </div>
 
                 <div id="surveyResults">
@@ -69,12 +69,12 @@ $show_graph = (count($optionNamesAbbrev) && !$_GET['dontGraphPoll'] && $totalVot
                             <tr>
 
                                 <td class="col-sm-2" style="white-space: nowrap">
-                                    <div class="surveySwatch" style="background:#<?php echo $graphColors[$i - 1] ?>"></div>
-                                    &nbsp;<?php echo ($totalVotes > 0) ? round($opt->getResults() / $totalVotes * 100) : 0 ?>%
+                                    <div class="surveySwatch" style="background:#<?= $graphColors[$i - 1] ?>"></div>
+                                    &nbsp;<?= ($totalVotes > 0) ? round($opt->getResults() / $totalVotes * 100) : 0 ?>%
                                 </td>
                                 <td>
                                     <strong>
-                                        <?php echo $opt->getOptionName() ?>
+                                        <?= $opt->getOptionName() ?>
                                     </strong>
                                 </td>
                             </tr>
@@ -86,7 +86,7 @@ $show_graph = (count($optionNamesAbbrev) && !$_GET['dontGraphPoll'] && $totalVot
                         ?>
                     </table>
                     <div class="help-block">
-                        <?php echo t2('%d Vote', '%d Votes', intval($totalVotes), intval($totalVotes)) ?>
+                        <?= t2('%d Vote', '%d Votes', intval($totalVotes), intval($totalVotes)) ?>
                     </div>
                 </div>
             </div>
@@ -96,9 +96,9 @@ $show_graph = (count($optionNamesAbbrev) && !$_GET['dontGraphPoll'] && $totalVot
                 <div class="col-sm-3">
                     <img
                         border=""
-                        src="//chart.apis.google.com/chart?chf=bg,s,FFFFFF00&cht=p&chd=t:<?php echo join(
+                        src="//chart.apis.google.com/chart?chf=bg,s,FFFFFF00&cht=p&chd=t:<?= join(
                             ',',
-                            $optionResults) ?>&chs=180x180&chco=<?php echo join(
+                            $optionResults) ?>&chs=180x180&chco=<?= join(
                             ',',
                             $graphColors) ?>"
                         alt="<?php echo t('survey results');
@@ -114,8 +114,8 @@ $show_graph = (count($optionNamesAbbrev) && !$_GET['dontGraphPoll'] && $totalVot
         if ($_GET['dontGraphPoll']) {
             ?>
             <div class="small right" style="margin-top:8px">
-                <a class="arrow" href="<?php echo DIR_REL ?>/?cID=<?php echo $b->getBlockCollectionID() ?>">
-                    <?php echo t('View Full Results') ?>
+                <a class="arrow" href="<?= DIR_REL ?>/?cID=<?= $b->getBlockCollectionID() ?>">
+                    <?= t('View Full Results') ?>
                 </a>
             </div>
         <?php
@@ -129,14 +129,14 @@ $show_graph = (count($optionNamesAbbrev) && !$_GET['dontGraphPoll'] && $totalVot
         ?>
 
         <div id="surveyQuestion" class="form-group">
-            <?php echo $controller->getQuestion() ?>
+            <?= $controller->getQuestion() ?>
         </div>
 
         <?php
         if (!$controller->requiresRegistration() || intval($uID) > 0) {
             ?>
-            <form method="post" action="<?php echo $view->action('form_save_vote') ?>">
-                <input type="hidden" name="rcID" value="<?php echo $c->getCollectionID() ?>"/>
+            <form method="post" action="<?= $view->action('form_save_vote') ?>">
+                <input type="hidden" name="rcID" value="<?= $c->getCollectionID() ?>"/>
         <?php
         }
         $options = $controller->getPollOptions();
@@ -144,8 +144,8 @@ $show_graph = (count($optionNamesAbbrev) && !$_GET['dontGraphPoll'] && $totalVot
             ?>
             <div class="radio">
                 <label>
-                    <input type="radio" name="optionID" value="<?php echo $opt->getOptionID() ?>"/>
-                    <?php echo $opt->getOptionName() ?>
+                    <input type="radio" name="optionID" value="<?= $opt->getOptionID() ?>"/>
+                    <?= $opt->getOptionName() ?>
                 </label>
             </div>
         <?php
@@ -154,14 +154,14 @@ $show_graph = (count($optionNamesAbbrev) && !$_GET['dontGraphPoll'] && $totalVot
             ?>
             <div class="form-group">
                 <button class="btn btn-primary">
-                    <?php echo t('Vote') ?>
+                    <?= t('Vote') ?>
                 </button>
             </div>
         <?php
         } else {
             ?>
             <span class="help-block">
-                <?php echo t('Please Login to Vote') ?>
+                <?= t('Please Login to Vote') ?>
             </span>
         <?php
         }

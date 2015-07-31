@@ -1,59 +1,59 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
-<?php $c = Page::getCurrentPage(); ?>
+<? $c = Page::getCurrentPage(); ?>
 
-<?php if (isset($wf)) { ?>
+<? if (isset($wf)) { ?>
 
-<?php if ($this->controller->getTask() == 'edit_details') { ?>
+<? if ($this->controller->getTask() == 'edit_details') { ?>
 
-<form method="post" action="<?php echo $view->action('save_workflow_details')?>" method="post">
-<input type="hidden" name="wfID" value="<?php echo $wf->getWorkflowID()?>" />
-<?php echo Loader::helper('validation/token')->output('save_workflow_details')?>
+<form method="post" action="<?=$view->action('save_workflow_details')?>" method="post">
+<input type="hidden" name="wfID" value="<?=$wf->getWorkflowID()?>" />
+<?=Loader::helper('validation/token')->output('save_workflow_details')?>
 
-<?php Loader::element("workflow/edit_type_form_required", array('workflow' => $wf)); ?>
+<? Loader::element("workflow/edit_type_form_required", array('workflow' => $wf)); ?>
 
 <div class="ccm-dashboard-form-actions-wrapper">
 <div class="ccm-dashboard-form-actions">
-	<a href="<?php echo URL::page($c, 'view_detail', $wf->getWorkflowID())?>" class="btn btn-default pull-left"><?php echo t("Cancel")?></a>
-	<input type="submit" name="submit" value="<?php echo t('Save')?>" class="btn btn-primary pull-right" />
+	<a href="<?=URL::page($c, 'view_detail', $wf->getWorkflowID())?>" class="btn btn-default pull-left"><?=t("Cancel")?></a>
+	<input type="submit" name="submit" value="<?=t('Save')?>" class="btn btn-primary pull-right" />
 </div>
 </div>
 </form>
 
-<?php } else { ?>
+<? } else { ?>
 
-	<?php Loader::element("workflow/type_form_required", array('workflow' => $wf)); ?>
+	<? Loader::element("workflow/type_form_required", array('workflow' => $wf)); ?>
 
-<?php } ?>
+<? } ?>
 
 
 
-<?php } else if ($this->controller->getTask() == 'add' || $this->controller->getTask() == 'submit_add') { ?>
+<? } else if ($this->controller->getTask() == 'add' || $this->controller->getTask() == 'submit_add') { ?>
 
-	<form method="post" action="<?php echo $view->action('submit_add')?>">
-	<?php echo Loader::helper('validation/token')->output('add_workflow')?>
+	<form method="post" action="<?=$view->action('submit_add')?>">
+	<?=Loader::helper('validation/token')->output('add_workflow')?>
 		<fieldset>
 		
-			<legend><?php echo t('Add Workflow')?></legend>
+			<legend><?=t('Add Workflow')?></legend>
 			
 			<div class="form-group">
-				<?php echo $form->label('wfName', t('Name'))?>
+				<?=$form->label('wfName', t('Name'))?>
 				<div class="input-group">
-					<?php echo $form->text('wfName', $wfName)?>
+					<?=$form->text('wfName', $wfName)?>
 					<span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
 				</div>
 			</div>
 			
 			<div class="form-group">
-				<?php echo $form->label('wftID', t('Type'))?>
+				<?=$form->label('wftID', t('Type'))?>
 				<div class="input-group">
-					<?php echo $form->select('wftID', $types)?>
+					<?=$form->select('wftID', $types)?>
 				</div>
 			</div>
 
-			<?php foreach($typeObjects as $type) { ?>
+			<? foreach($typeObjects as $type) { ?>
 				
-				<div style="display: none" class="form-group ccm-workflow-type-form" id="ccm-workflow-type-<?php echo $type->getWorkflowTypeID()?>">
-					<?php 
+				<div style="display: none" class="form-group ccm-workflow-type-form" id="ccm-workflow-type-<?=$type->getWorkflowTypeID()?>">
+					<? 
 					if ($type->getPackageID() > 0) { 
 						@Loader::packageElement('workflow/types/' . $type->getWorkflowTypeHandle()  . '/add_type_form', $type->getPackageHandle(), array('type' => $type));
 					} else {
@@ -61,13 +61,13 @@
 					}
 					?>
 				</div>
-			<?php } ?>
+			<? } ?>
 		</fieldset>
 		
 		<div class="ccm-dashboard-form-actions-wrapper">
 		<div class="ccm-dashboard-form-actions">
-			<a href="<?php echo URL::page($c)?>" class="btn btn-default pull-left"><?php echo t('Cancel')?></a>
-			<button type="submit" class="btn btn-primary pull-right"><?php echo t('Add')?></button>
+			<a href="<?=URL::page($c)?>" class="btn btn-default pull-left"><?=t('Cancel')?></a>
+			<button type="submit" class="btn btn-primary pull-right"><?=t('Add')?></button>
 		</div>
 		</div>
 			
@@ -83,18 +83,18 @@
 	});
 	</script>
 
-<?php } else { ?>
+<? } else { ?>
 
 	<div class="ccm-dashboard-header-buttons">
-		<a href="<?php echo URL::to('/dashboard/workflow/workflows', 'add')?>" class="btn btn-primary"><?php echo t('Add Workflow')?></a>
+		<a href="<?=URL::to('/dashboard/workflow/workflows', 'add')?>" class="btn btn-primary"><?=t('Add Workflow')?></a>
 	</div>
 	
-	<h4><?php echo t2('%d Workflow', '%d Workflows', count($workflows))?></h4>
+	<h4><?=t2('%d Workflow', '%d Workflows', count($workflows))?></h4>
 	
 	<ul class="item-select-list">
-	<?php foreach($workflows as $workflow) { ?>
-		<li><a href="<?php echo $view->url('/dashboard/workflow/workflows', 'view_detail', $workflow->getWorkflowID())?>"><i class="fa fa-exchange"></i> <?php echo $workflow->getWorkflowDisplayName()?></a></li>
-	<?php } ?>
+	<? foreach($workflows as $workflow) { ?>
+		<li><a href="<?=$view->url('/dashboard/workflow/workflows', 'view_detail', $workflow->getWorkflowID())?>"><i class="fa fa-exchange"></i> <?=$workflow->getWorkflowDisplayName()?></a></li>
+	<? } ?>
 	</ul>
 
-<?php } ?>
+<? } ?>

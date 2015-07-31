@@ -1,12 +1,12 @@
 <?php
 if (isset($error)) {
     ?>
-    <div class="alert alert-danger"><?php echo $error ?></div>
+    <div class="alert alert-danger"><?= $error ?></div>
     <?php
 }
 if (isset($message)) {
     ?>
-    <div class="alert alert-success"><?php echo $message ?></div>
+    <div class="alert alert-success"><?= $message ?></div>
 <?php
 }
 
@@ -16,14 +16,14 @@ if ($user->isLoggedIn()) {
     ?>
     <div class="form-group">
         <span>
-            <?php echo t('Attach a community account') ?>
+            <?= t('Attach a community account') ?>
         </span>
         <hr>
     </div>
     <div class="form-group">
-        <a href="<?php echo \URL::to('/ccm/system/authentication/oauth2/community/attempt_attach'); ?>" class="btn btn-primary btn-community btn-block">
-            <img src="<?php echo Core::getApplicationURL() ?>/concrete/images/logo.png" class="concrete5-icon"></i>
-            <?php echo t('Attach a concrete5.org account') ?>
+        <a href="<?= \URL::to('/ccm/system/authentication/oauth2/community/attempt_attach'); ?>" class="btn btn-primary btn-community btn-block">
+            <img src="<?= Core::getApplicationURL() ?>/concrete/images/logo.png" class="concrete5-icon"></i>
+            <?= t('Attach a concrete5.org account') ?>
         </a>
     </div>
     <?php
@@ -31,18 +31,18 @@ if ($user->isLoggedIn()) {
     ?>
     <div class="form-group">
         <span>
-            <?php echo t('Sign in with a community account') ?>
+            <?= t('Sign in with a community account') ?>
         </span>
-        <hr>
+        <hr class="ccm-authentication-type-community">
     </div>
     <div class="form-group">
-        <a href="<?php echo \URL::to('/ccm/system/authentication/oauth2/community/attempt_auth'); ?>" class="btn btn-primary btn-community btn-block">
-            <img src="<?php echo Core::getApplicationURL() ?>/concrete/images/logo.png" class="concrete5-icon"></i>
-            <?php echo t('Log in with concrete5.org') ?>
+        <a href="<?= \URL::to('/ccm/system/authentication/oauth2/community/attempt_auth'); ?>" class="btn btn-primary btn-community btn-block">
+            <img src="<?= Core::getApplicationURL() ?>/concrete/images/logo.png" class="concrete5-icon"></i>
+            <?= t('Log in with concrete5.org') ?>
         </a>
     </div>
     <div class="form-group">
-        <p><?php echo t('Join the concrete5.org community to setup multiple websites, shop for extensions, and get support.') ?></p>
+        <p><?= t('Join the concrete5.org community to setup multiple websites, shop for extensions, and get support.') ?></p>
     </div>
     <?php
 }
@@ -58,6 +58,10 @@ if ($user->isLoggedIn()) {
         background: -ms-linear-gradient(top, rgba(31,186,232,1) 0%,rgba(18,155,211,1) 100%);
         background: linear-gradient(to bottom, rgba(31,186,232,1) 0%,rgba(18,155,211,1) 100%);
         filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1fbae8', endColorstr='#129bd3',GradientType=0 );
+    }
+
+    .ccm-concrete-authentication-type-svg > svg {
+      width: 16px;
     }
 
     img.concrete5-icon {
@@ -78,13 +82,15 @@ if ($user->isLoggedIn()) {
             $(function() {
 
                 if (svg.closest('li').hasClass('active')) {
-                    svg.attr('fill', 'white');
+                    var color = $('ul.auth-types li.active').css('color');
+                    svg.attr('fill', color);
                 } else {
                     svg.attr('fill', 'rgb(155,155,155)');
                 }
                 Concrete.event.bind('AuthenticationTypeSelected', function(e, handle) {
                     if (handle === 'community') {
-                        svg.attr('fill', 'white');
+                        var color = $('ul.auth-types li.active').css('color');
+                        svg.attr('fill', color);
                     } else {
                         svg.attr('fill', 'rgb(155,155,155)');
                     }

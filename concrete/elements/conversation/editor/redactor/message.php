@@ -12,7 +12,7 @@ print $form->textarea($editor->getConversationEditorInputName(), $editor->getCon
 ?>
 <script>
 $(function() {
-    var textarea = $('textarea.unbound.redactor_conversation_editor_<?php echo $cnvID?>').removeClass('unbound');
+    var textarea = $('textarea.unbound.redactor_conversation_editor_<?=$cnvID?>').removeClass('unbound');
     $(textarea).redactor({
         autoresize: false,
         minHeight: '150px',

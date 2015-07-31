@@ -3,15 +3,15 @@ defined('C5_EXECUTE') or die('Access Denied');
 ?>
 <div class="form-group">
             <span>
-                <?php echo t('Attach a %s account', t('twitter')) ?>
+                <?= t('Attach a %s account', t('twitter')) ?>
             </span>
     <hr>
 </div>
 <div class="form-group">
-    <a href="<?php echo \URL::to('/ccm/system/authentication/oauth2/twitter/attempt_attach'); ?>"
+    <a href="<?= \URL::to('/ccm/system/authentication/oauth2/twitter/attempt_attach'); ?>"
        class="btn btn-primary btn-twitter">
         <i class="fa fa-twitter"></i>
-        <?php echo t('Attach a %s account', t('twitter')) ?>
+        <?= t('Attach a %s account', t('twitter')) ?>
     </a>
 </div>
 <style>

@@ -1,4 +1,4 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
+<? defined('C5_EXECUTE') or die("Access Denied.");
 
 $nh = Loader::helper('validation/numbers');
 if ($_POST['gaID'] && $nh->integer($_POST['gaID'])) {

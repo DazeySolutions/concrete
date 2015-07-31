@@ -1,5 +1,6 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
+
 $c = Page::getCurrentPage();
 if (is_object($c)) {
 	$cp = new Permissions($c);
@@ -64,14 +65,14 @@ $akd = $c->getCollectionAttributeValue('meta_description');
 $akk = $c->getCollectionAttributeValue('meta_keywords');
 ?>
 <title><?php echo htmlspecialchars($pageTitle, ENT_COMPAT, APP_CHARSET)?></title>
-<?php
+<?
 if ($akd) { ?>
-<meta name="description" content="<?php echo htmlspecialchars($akd, ENT_COMPAT, APP_CHARSET)?>" />
+<meta name="description" content="<?=htmlspecialchars($akd, ENT_COMPAT, APP_CHARSET)?>" />
 <?php } else { ?>
-<meta name="description" content="<?php echo htmlspecialchars($pageDescription, ENT_COMPAT, APP_CHARSET)?>" />
+<meta name="description" content="<?=htmlspecialchars($pageDescription, ENT_COMPAT, APP_CHARSET)?>" />
 <?php }
 if ($akk) { ?>
-<meta name="keywords" content="<?php echo htmlspecialchars($akk, ENT_COMPAT, APP_CHARSET)?>" />
+<meta name="keywords" content="<?=htmlspecialchars($akk, ENT_COMPAT, APP_CHARSET)?>" />
 <?php }
 if($c->getCollectionAttributeValue('exclude_search_index')) { ?>
     <meta name="robots" content="noindex" />
@@ -104,11 +105,11 @@ var CCM_REL = "<?php echo \Core::getApplicationRelativePath()?>";
 
 </script>
 
-<?php if (is_object($scc)) { ?>
+<? if (isset($scc) && is_object($scc)) { ?>
     <style type="text/css">
-        <?php print $scc->getValue();?>
+        <? print $scc->getValue();?>
     </style>
-<?php } ?>
+<? } ?>
 
 <?php
 
@@ -128,8 +129,8 @@ if($favIconFID) {
     $f = File::getByID($favIconFID);
     if (is_object($f)) {
         ?>
-        <link rel="shortcut icon" href="<?php echo $f->getRelativePath() ?>" type="image/x-icon"/>
-        <link rel="icon" href="<?php echo $f->getRelativePath() ?>" type="image/x-icon"/>
+        <link rel="shortcut icon" href="<?php echo $f->getURL() ?>" type="image/x-icon"/>
+        <link rel="icon" href="<?php echo $f->getURL() ?>" type="image/x-icon"/>
     <?php
     }
 }
@@ -138,7 +139,7 @@ if($appleIconFID) {
     $f = File::getByID($appleIconFID);
     if (is_object($f)) {
         ?>
-        <link rel="apple-touch-icon" href="<?php echo $f->getRelativePath() ?>"/>
+        <link rel="apple-touch-icon" href="<?php echo $f->getURL() ?>"/>
     <?php
     }
 }
@@ -147,7 +148,7 @@ if($modernIconFID) {
 	$f = File::getByID($modernIconFID);
     if(is_object($f)) {
         ?>
-        <meta name="msapplication-TileImage" content="<?php echo $f->getRelativePath(); ?>" /><?php
+        <meta name="msapplication-TileImage" content="<?php echo $f->getURL(); ?>" /><?php
         echo "\n";
         if (strlen($modernIconBGColor)) {
             ?>
@@ -166,7 +167,7 @@ if (is_object($cp)) {
 		$v->addFooterItem('<script type="text/javascript">$(function() { new ConcreteNewsflowDialog().open(); });</script>');
 	}
 
-	if ($_COOKIE['ccmLoadAddBlockWindow'] && $c->isEditMode()) {
+	if (array_get($_COOKIE, 'ccmLoadAddBlockWindow') && $c->isEditMode()) {
 		$v->addFooterItem('<script type="text/javascript">$(function() { setTimeout(function() { $("a[data-launch-panel=add-block]").click()}, 100); });</script>', 'CORE');
 		setcookie("ccmLoadAddBlockWindow", false, -1, DIR_REL . '/');
 	}

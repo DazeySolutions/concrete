@@ -9,11 +9,11 @@ $subject = $siteName.' '.t('Registration Approved');
 ob_start();
 
 ?>
-<h2><?php echo t('Welcome to') ?> <?php echo $siteName ?></h2>
-<?php echo t("Your registration has been approved. You can log into your new account here") ?>:<br />
+<h2><?= t('Welcome to') ?> <?= $siteName ?></h2>
+<?= t("Your registration has been approved. You can log into your new account here") ?>:<br />
 <br />
-<a href="<?php echo View::url('/login') ?>"><?php echo View::url('/login') ?></a>
-<?php
+<a href="<?= View::url('/login') ?>"><?= View::url('/login') ?></a>
+<?
 
 $bodyHTML = ob_get_clean();
 /**
@@ -26,12 +26,12 @@ $bodyHTML = ob_get_clean();
 ob_start();
 
 ?>
-<?php echo t('Welcome to') ?> <?php echo $siteName ?>
+<?= t('Welcome to') ?> <?= $siteName ?>
 
-<?php echo t("Your registration has been approved. You can log into your new account here") ?>:
+<?= t("Your registration has been approved. You can log into your new account here") ?>:
 
-<?php echo View::url('/login') ?>
-<?php
+<?= View::url('/login') ?>
+<?
 
 $body = ob_get_clean();
 /**

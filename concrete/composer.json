@@ -2,7 +2,7 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/mlocati/zendframework2-i18n-v2"
+            "url": "https://github.com/mlocati/zendframework2-i18n-v3"
         },
         {
             "type": "vcs",
@@ -29,7 +29,7 @@
         "patchwork/utf8": "1.1.x-dev",
         "oyejorge/less.php": "v1.7.0.1",
         "imagine/imagine": "0.6.*@dev",
-        "innogames/cssmin": "dev-master",
+        "natxet/cssmin": "dev-master",
         "tedivm/jshrink": "0.5.*",
         "michelf/php-markdown": "1.4.*@dev",
         "filp/whoops": "1.*",
@@ -52,11 +52,12 @@
         "zendframework/zend-i18n": "2.2.*",
         "nesbot/carbon": "1.11.*",
         "egulias/email-validator": "1.2.0",
-        "punic/punic": "1.6.1",
+        "punic/punic": "1.6.3",
         "tedivm/stash": "0.12.1",
         "lusitanian/oauth": "~0.3",
         "oryzone/oauth-user-data": "~1.0@dev",
-        "mlocati/concrete5-translation-library": "1.4.1",
-        "league/url": "3.*"
+        "mlocati/concrete5-translation-library": "1.4.2",
+        "league/url": "3.3.*",
+        "concrete5/doctrine-xml": "1.0.0"
     }
 }

@@ -2,14 +2,14 @@
 
 <div class="form-group">
         <span>
-            <?php echo t('Attach a %s account', t('facebook')) ?>
+            <?= t('Attach a %s account', t('facebook')) ?>
         </span>
     <hr>
 </div>
 <div class="form-group">
-    <a href="<?php echo \URL::to('/ccm/system/authentication/oauth2/facebook/attempt_attach'); ?>" class="btn btn-primary btn-facebook">
+    <a href="<?= \URL::to('/ccm/system/authentication/oauth2/facebook/attempt_attach'); ?>" class="btn btn-primary btn-facebook">
         <i class="fa fa-facebook"></i>
-        <?php echo t('Attach a %s account', t('facebook')) ?>
+        <?= t('Attach a %s account', t('facebook')) ?>
     </a>
 </div>
 

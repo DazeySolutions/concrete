@@ -1,9 +1,9 @@
-<?php
+<?
 defined('C5_EXECUTE') or die("Access Denied.");
 $sh = Loader::helper('concrete/dashboard/sitemap');
 ?>
 
-<?php if ($sh->canRead()) { ?>
+<? if ($sh->canRead()) { ?>
 
 	<div class="ccm-dashboard-content-full">
 	<script type="text/javascript">
@@ -28,32 +28,32 @@ $sh = Loader::helper('concrete/dashboard/sitemap');
 	}
 	</style>
 
-	<form action="<?php echo URL::to('/dashboard/sitemap/search')?>"  class="form-inline ccm-search-fields-none ccm-search-fields">
+	<form action="<?=URL::to('/dashboard/sitemap/search')?>"  class="form-inline ccm-search-fields-none ccm-search-fields">
 		<div class="form-group">
 			<div class="ccm-search-main-lookup-field">
 				<i class="fa fa-search"></i>
-				<?php echo $form->search('cvName', array('placeholder' => t('Name')))?>
-				<button type="submit" class="ccm-search-field-hidden-submit" tabindex="-1"><?php echo t('Search')?></button>
+				<?=$form->search('cvName', array('placeholder' => t('Name')))?>
+				<button type="submit" class="ccm-search-field-hidden-submit" tabindex="-1"><?=t('Search')?></button>
 			</div>
 		</div>
 		<ul class="ccm-search-form-advanced list-inline">
-			<li><a href="<?php echo URL::to('/dashboard/sitemap/search')?>"><?php echo t('Advanced Search')?></a>
+			<li><a href="<?=URL::to('/dashboard/sitemap/search')?>"><?=t('Advanced Search')?></a>
 		</ul>
 	</form>
 
 
-	<?php $u = new User();
+	<? $u = new User();
 	if ($u->isSuperUser()) {
 		if (Queue::exists('copy_page')) {
 		$q = Queue::get('copy_page');
 		if ($q->count() > 0) { ?>
 
 			<div class="alert alert-warning">
-				<?php echo t('Page copy operations pending.')?>
-				<button class="btn btn-xs btn-default pull-right" onclick="ConcreteSitemap.refreshCopyOperations()"><?php echo t('Resume Copy')?></button>
+				<?=t('Page copy operations pending.')?>
+				<button class="btn btn-xs btn-default pull-right" onclick="ConcreteSitemap.refreshCopyOperations()"><?=t('Resume Copy')?></button>
 			</div>
 
-		<?php }
+		<? }
 	}
 
 	} ?>
@@ -67,16 +67,16 @@ $sh = Loader::helper('concrete/dashboard/sitemap');
 		<section>
 			<div class="checkbox">
 			<label>
-				<input type="checkbox" name="includeSystemPages" <?php if ($includeSystemPages) { ?>checked<?php } ?> value="1" />
-				<?php echo t('Include System Pages in Sitemap')?>
+				<input type="checkbox" name="includeSystemPages" <? if ($includeSystemPages) { ?>checked<? } ?> value="1" />
+				<?=t('Include System Pages in Sitemap')?>
 			</label>
 			</div>
 		</section>
 
 
 	</div>
-<?php } else { ?>
+<? } else { ?>
 
-	<p><?php echo t("You do not have access to the sitemap.");?></p>
+	<p><?=t("You do not have access to the sitemap.");?></p>
 
-<?php } ?>
+<? } ?>

@@ -1,25 +1,25 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<? defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<?php if (isset($key)) { ?>
+<? if (isset($key)) { ?>
 
-<form method="post" action="<?php echo $view->action('edit')?>" id="ccm-attribute-key-form">
+<form method="post" action="<?=$view->action('edit')?>" id="ccm-attribute-key-form">
 
-<?php Loader::element("attribute/type_form_required", array('category' => $category, 'type' => $type, 'key' => $key)); ?>
+<? Loader::element("attribute/type_form_required", array('category' => $category, 'type' => $type, 'key' => $key)); ?>
 
 </form>
 
 
-<?php } else if ($this->controller->getTask() == 'select_type' || $this->controller->getTask() == 'add' || $this->controller->getTask() == 'edit') { ?>
+<? } else if ($this->controller->getTask() == 'select_type' || $this->controller->getTask() == 'add' || $this->controller->getTask() == 'edit') { ?>
 
-	<?php if (isset($type)) { ?>
-		<form method="post" action="<?php echo $view->action('add')?>" id="ccm-attribute-key-form">
+	<? if (isset($type)) { ?>
+		<form method="post" action="<?=$view->action('add')?>" id="ccm-attribute-key-form">
 	
-		<?php Loader::element("attribute/type_form_required", array('category' => $category, 'type' => $type)); ?>
+		<? Loader::element("attribute/type_form_required", array('category' => $category, 'type' => $type)); ?>
 	
 		</form>	
-	<?php } ?>
+	<? } ?>
 
-<?php } else {
+<? } else {
 
 	$attribs = UserAttributeKey::getList();
 	Loader::element('dashboard/attributes_table', array(
@@ -40,8 +40,8 @@
             opacity: 0.5,
             stop: function() {
                 var ualist = $(this).sortable('serialize');
-                ualist += '&ccm_token=' + '<?php echo $controller->token->generate('attribute_sort')?>';
-                $.post('<?php echo URL::to('/ccm/system/attribute/attribute_sort/user')?>', ualist, function(r) {});
+                ualist += '&ccm_token=' + '<?=$controller->token->generate('attribute_sort')?>';
+                $.post('<?=URL::to('/ccm/system/attribute/attribute_sort/user')?>', ualist, function(r) {});
             }
         });
     });

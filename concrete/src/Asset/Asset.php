@@ -5,7 +5,7 @@ namespace Concrete\Core\Asset;
 use Concrete\Core\Package\Package;
 use Environment;
 
-abstract class Asset
+abstract class Asset implements AssetInterface
 {
     /**
      * @var string
@@ -73,8 +73,13 @@ abstract class Asset
      * @param Asset[] $assets
      *
      * @return Asset[]
+     *
+     * @abstract
      */
-    abstract public static function process($assets);
+    public static function process($assets)
+    {
+        return $assets;
+    }
 
     abstract public function __toString();
 
@@ -127,9 +132,16 @@ abstract class Asset
         if ($this->isAssetLocal()) {
             $filename = $this->getAssetPath();
             if (is_file($filename)) {
-                $mtime = @filemtime($filename);
-                if ($mtime !== false) {
-                    $result .= '@' . $mtime;
+                if (is_readable($filename) && \Config::get('concrete.cache.full_contents_assets_hash')) {
+                    $sha1 = @sha1_file($filename);
+                    if ($sha1 !== false) {
+                        $result = $sha1;
+                    }
+                } else {
+                    $mtime = @filemtime($filename);
+                    if ($mtime !== false) {
+                        $result .= '@' . $mtime;
+                    }
                 }
             }
         }

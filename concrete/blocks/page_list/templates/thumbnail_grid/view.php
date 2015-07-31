@@ -8,9 +8,9 @@ $c = Page::getCurrentPage();
 
     <?php if ($pageListTitle): ?>
         <div class="ccm-block-page-list-header">
-            <h5><?php echo h($pageListTitle)?></h5>
+            <h5><?=h($pageListTitle)?></h5>
         </div>
-    <?php endif; ?>
+    <? endif; ?>
 
     <?php foreach ($pages as $page):
 
@@ -33,7 +33,7 @@ $c = Page::getCurrentPage();
 
         <?php if (is_object($thumbnail)): ?>
             <div class="ccm-block-page-list-page-entry-grid-thumbnail">
-                <a href="<?php echo $url ?>" target="<?php echo $target ?>"><?php
+                <a href="<?php echo $url ?>" target="<?php echo $target ?>"><?
                 $img = Core::make('html/image', array($thumbnail));
                 $tag = $img->getTag();
                 $tag->addClass('img-responsive');
@@ -43,38 +43,38 @@ $c = Page::getCurrentPage();
                         <div class="ccm-block-page-list-page-entry-grid-thumbnail-title-wrapper">
                         <div class="ccm-block-page-list-page-entry-grid-thumbnail-title">
                             <i class="ccm-block-page-list-page-entry-grid-thumbnail-icon"></i>
-                            <?php echo $hoverLinkText?>
+                            <?=$hoverLinkText?>
                         </div>
                         </div>
                     </div>
                 </a>
 
-                <?php if ($useButtonForLink) { ?>
+                <? if ($useButtonForLink) { ?>
                 <div class="ccm-block-page-list-title">
                     <?php echo $title; ?>
                 </div>
-                <?php } ?>
+                <? } ?>
 
-                <?php if ($includeDate): ?>
-                    <div class="ccm-block-page-list-date"><?php echo $date?></div>
-                <?php endif; ?>
+                <? if ($includeDate): ?>
+                    <div class="ccm-block-page-list-date"><?=$date?></div>
+                <? endif; ?>
 
-                <?php if ($includeDescription): ?>
+                <? if ($includeDescription): ?>
                     <div class="ccm-block-page-list-description">
                         <?php echo $description ?>
                     </div>
-                <?php endif; ?>
+                <? endif; ?>
 
             </div>
-        <?php endif; ?>
+        <? endif; ?>
 
         </div>
 
 	<?php endforeach; ?>
 
-    <?php if (count($pages) == 0): ?>
-        <div class="ccm-block-page-list-no-pages"><?php echo h($noResultsMessage)?></div>
-    <?php endif;?>
+    <? if (count($pages) == 0): ?>
+        <div class="ccm-block-page-list-no-pages"><?=h($noResultsMessage)?></div>
+    <? endif;?>
 
 </div>
 
@@ -82,6 +82,6 @@ $c = Page::getCurrentPage();
     <?php echo $pagination;?>
 <?php endif; ?>
 
-<?php if ( $c->isEditMode() && $controller->isBlockEmpty()): ?>
-    <div class="ccm-edit-mode-disabled-item"><?php echo t('Empty Page List Block.')?></div>
-<?php endif; ?>
+<? if ( $c->isEditMode() && $controller->isBlockEmpty()): ?>
+    <div class="ccm-edit-mode-disabled-item"><?=t('Empty Page List Block.')?></div>
+<? endif; ?>

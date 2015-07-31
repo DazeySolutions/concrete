@@ -76,7 +76,7 @@ $captcha = $surveyBlockInfo['displayCaptcha'] ? Loader::helper('validation/captc
 */?>
 
 <div id="formblock<?php  echo $bID; ?>" class="ccm-block-type-form">
-<form enctype="multipart/form-data" class="form-stacked" id="miniSurveyView<?php  echo $bID; ?>" class="miniSurveyView" method="post" action="<?php  echo $formAction ?>">
+<form enctype="multipart/form-data" class="form-stacked miniSurveyView" id="miniSurveyView<?php  echo $bID; ?>" method="post" action="<?php  echo $formAction ?>">
 
 	<?php  if ($success): ?>
 		
@@ -97,11 +97,11 @@ $captcha = $surveyBlockInfo['displayCaptcha'] ? Loader::helper('validation/captc
 	<div class="fields">
 		
 		<?php  foreach ($questions as $question): ?>
-			<div class="form-group field field-<?php  echo $question['type']; ?>">
+			<div class="form-group field field-<?php  echo $question['type']; ?> <?php echo $errorDetails[$question['msqID']] ? 'has-error' : ''?>">
 				<label class="control-label" <?php  echo $question['labelFor']; ?>>
 					<?php  echo $question['question']; ?>
                     <?php if ($question['required']): ?>
-                        <span class="text-muted small" style="font-weight: normal"><?php echo t("Required")?></span>
+                        <span class="text-muted small" style="font-weight: normal"><?=t("Required")?></span>
                     <?php  endif; ?>
 				</label>
 				<?php  echo $question['input']; ?>

@@ -3,19 +3,19 @@ defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 
 <div class="ccm-panel-content-inner">
-    <h5><?php echo t("Currently Viewing")?></h5>
+    <h5><?=t("Currently Viewing")?></h5>
     <ul class="item-select-list">
-        <?php
+        <?
         $relatedID = $currentSection->getTranslatedPageID($c);
         $icon = $ih->getSectionFlagIcon($currentSection);
         $locale = $currentSection->getLocale();
         ?>
-        <li class="ccm-panel-multilingual-current-section"><span><?php echo $icon?> <?php echo $c->getCollectionName()?></span></li>
+        <li class="ccm-panel-multilingual-current-section"><span><?=$icon?> <?=$c->getCollectionName()?></span></li>
     </ul>
 
-    <h5><?php echo t('Mapped in Other Sections')?></h5>
+    <h5><?=t('Mapped in Other Sections')?></h5>
     <ul class="item-select-list">
-        <?php foreach($list as $m) {
+        <? foreach($list as $m) {
             $relatedID = $m->getTranslatedPageID($c);
             $icon = $ih->getSectionFlagIcon($m);
             $locale = $m->getLocale();
@@ -23,27 +23,27 @@ defined('C5_EXECUTE') or die("Access Denied.");
             $cParentRelatedID = $m->getTranslatedPageID($cParent);
         ?>
             <li>
-                <?php if ($relatedID && $currentSection->getCollectionID() != $m->getCollectionID()) {
+                <? if ($relatedID && $currentSection->getCollectionID() != $m->getCollectionID()) {
                     $relatedPage = Page::getByID($relatedID, 'RECENT'); ?>
-                    <a href="<?php echo $relatedPage->getCollectionLink()?>"><?php echo $icon?> <?php echo $relatedPage->getCollectionName()?></a>
-                <?php } else { ?>
-                    <a href="#" class="ccm-panel-multilingual-section-no-mappings" data-launch-multilingual-menu="<?php echo $m->getCollectionID()?>"><?php echo $icon?> <span><?php echo t('None Created')?></span></a>
-                    <div class="ccm-popover-inverse popover fade" data-multilingual-menu="<?php echo $m->getCollectionID()?>">
+                    <a href="<?=$relatedPage->getCollectionLink()?>"><?=$icon?> <?=$relatedPage->getCollectionName()?></a>
+                <? } else { ?>
+                    <a href="#" class="ccm-panel-multilingual-section-no-mappings" data-launch-multilingual-menu="<?=$m->getCollectionID()?>"><?=$icon?> <span><?=t('None Created')?></span></a>
+                    <div class="ccm-popover-inverse popover fade" data-multilingual-menu="<?=$m->getCollectionID()?>">
                         <div class="popover-inner">
                             <ul class="dropdown-menu">
-                                <?php if ($cParentRelatedID) { ?>
-                                    <li><a href="#" data-multilingual-create-page="<?php echo $m->getCollectionID()?>"><?php echo t('Create Page')?></a></li>
-                                <?php } else { ?>
-                                    <li class="disabled"><a href="#" title="<?php echo t('Parent page does not exist. Create the parent page in this tree first.')?>"><?php echo t('Create Page')?></a></li>
-                                <?php } ?>
+                                <? if ($cParentRelatedID) { ?>
+                                    <li><a href="#" data-multilingual-create-page="<?=$m->getCollectionID()?>"><?=t('Create Page')?></a></li>
+                                <? } else { ?>
+                                    <li class="disabled"><a href="#" title="<?=t('Parent page does not exist. Create the parent page in this tree first.')?>"><?=t('Create Page')?></a></li>
+                                <? } ?>
                                 <li class="divider"></li>
-                                <li><a href="#" data-multilingual-map-page="<?php echo $m->getCollectionID()?>"><?php echo t('Map Existing Page')?></a></li>
+                                <li><a href="#" data-multilingual-map-page="<?=$m->getCollectionID()?>"><?=t('Map Existing Page')?></a></li>
                             </ul>
                         </div>
                     </div>
-                <?php } ?>
+                <? } ?>
             </li>
-        <?php } ?>
+        <? } ?>
     </ul>
 </div>
 
@@ -66,11 +66,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
             e.preventDefault();
             var cID = $(this).attr('data-multilingual-create-page');
             $.concreteAjax({
-                url: '<?php echo $multilingualController->action('create_new')?>',
+                url: '<?=$multilingualController->action('create_new')?>',
                 method: 'post',
                 data: {
                     'section': cID,
-                    'cID': '<?php echo $c->getCollectionID()?>'
+                    'cID': '<?=$c->getCollectionID()?>'
                 },
                 success: function(r) {
                     ConcreteAlert.notify({
@@ -90,7 +90,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
             var cID = $(this).attr('data-multilingual-map-page');
             ConcretePageAjaxSearch.launchDialog(function(data) {
                 $.concreteAjax({
-                    url: '<?php echo $multilingualController->action('assign')?>',
+                    url: '<?=$multilingualController->action('assign')?>',
                     method: 'post',
                     data: {
                         'destID': data.cID,

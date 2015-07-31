@@ -18,10 +18,19 @@ class CustomStyle extends AbstractCustomStyle
      */
     protected $set;
 
-    public function __construct(StyleSet $set = null, $arHandle = null)
+    protected $theme;
+
+    public function __construct(StyleSet $set = null, Area $area, $theme)
     {
-        $this->arHandle = $arHandle;
+        $this->arHandle = $area->getAreaHandle();
         $this->set = $set;
+        $this->theme = $theme;
+    }
+
+    public function getStyleWrapper($css)
+    {
+        $style = '<style type="text/css" data-area-style-area-handle="' . $this->arHandle . '" data-style-set="' . $this->getStyleSet()->getID() . '">' . $css . '</style>';
+        return $style;
     }
 
     /**
@@ -106,8 +115,11 @@ class CustomStyle extends AbstractCustomStyle
         $class = 'ccm-custom-style-';
         $txt = Core::make('helper/text');
         $class .= strtolower($txt->filterNonAlphaNum($this->arHandle));
-        if (is_object($this->set) && $this->set->getCustomClass()) {
-            $class .= ' ' . $this->set->getCustomClass();
+        if (is_object($this->set)) {
+            $return = $this->set->getClass($this->theme);
+            if ($return) {
+                $class .= ' ' . $return;
+            }
         }
         return $class;
     }

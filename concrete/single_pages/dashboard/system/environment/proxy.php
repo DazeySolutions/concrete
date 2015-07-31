@@ -10,27 +10,27 @@ defined('C5_EXECUTE') or die("Access Denied.");
         <div class="col-md-4">
             <fieldset>
                 <div class="form-group">
-                    <?php echo $form->label('http_proxy_host', t('Proxy Host'));?>
+                    <?=$form->label('http_proxy_host', t('Proxy Host'));?>
                     <div class="input">
-                        <?php echo $form->text('http_proxy_host', $http_proxy_host)?>
+                        <?=$form->text('http_proxy_host', $http_proxy_host)?>
                     </div>
                 </div>
                 <div class="form-group">
-                    <?php echo $form->label('http_proxy_port', t('Proxy Port'));?>
+                    <?=$form->label('http_proxy_port', t('Proxy Port'));?>
                     <div class="input">
-                        <?php echo $form->text('http_proxy_port', $http_proxy_port)?>
+                        <?=$form->text('http_proxy_port', $http_proxy_port)?>
                     </div>
                 </div>
                 <div class="form-group">
-                    <?php echo $form->label('http_proxy_user', t('Proxy User'));?>
+                    <?=$form->label('http_proxy_user', t('Proxy User'));?>
                     <div class="input">
-                        <?php echo $form->text('http_proxy_user', $http_proxy_user)?>
+                        <?=$form->text('http_proxy_user', $http_proxy_user)?>
                     </div>
                 </div>
                 <div class="form-group">
-                    <?php echo $form->label('http_proxy_pwd', t('Proxy Password'));?>
+                    <?=$form->label('http_proxy_pwd', t('Proxy Password'));?>
                     <div class="input">
-                        <?php echo $form->text('http_proxy_pwd', $http_proxy_pwd)?>
+                        <?=$form->text('http_proxy_pwd', $http_proxy_pwd)?>
                     </div>
                 </div>
             </fieldset>

@@ -5,15 +5,15 @@ if (is_object($configuration)) {
     $relativePath = $configuration->getWebRootRelativePath();
 }
 ?>
-<?php $form = Loader::helper('form'); ?>
+<? $form = Loader::helper('form'); ?>
 <div class="form-group">
-    <label for="path"><?php echo t('Root Path')?></label>
+    <label for="path"><?=t('Root Path')?></label>
     <div class="input-group">
-        <?php echo $form->text('fslType[path]', $path, array('placeholder' => t('Example: %ssome/path', $_SERVER['DOCUMENT_ROOT'])))?>
+        <?=$form->text('fslType[path]', $path, array('placeholder' => t('Example: %ssome/path', $_SERVER['DOCUMENT_ROOT'])))?>
         <span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
     </div>
 </div>
 <div class="form-group">
-    <label for="path"><?php echo t('Relative Path')?></label>
-    <?php echo $form->text('fslType[relativePath]', $relativePath, array('placeholder' => t('Example: %s', '/some/path')))?>
+    <label for="path"><?=t('Relative Path')?></label>
+    <?=$form->text('fslType[relativePath]', $relativePath, array('placeholder' => t('Example: %s', '/some/path')))?>
 </div>

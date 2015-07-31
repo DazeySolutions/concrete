@@ -1,4 +1,4 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");?>
+<? defined('C5_EXECUTE') or die("Access Denied.");?>
     <form method="post" id="public-profiles-form" action="<?php echo $view->url('/dashboard/system/registration/profiles', 'update_profiles')?>">
 	<div class="container">
     	<div class="row">
@@ -38,7 +38,7 @@
 
 	<div class="ccm-dashboard-form-actions-wrapper">
 	<div class="ccm-dashboard-form-actions">
-		<button class="pull-right btn btn-primary" type="submit" ><?php echo t('Save')?></button>
+		<button class="pull-right btn btn-primary" type="submit" ><?=t('Save')?></button>
 	</div>
 	</div>
 

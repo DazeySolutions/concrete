@@ -1,12 +1,12 @@
 <?php
 if (isset($error)) {
     ?>
-    <div class="alert alert-danger"><?php echo $error ?></div>
+    <div class="alert alert-danger"><?= $error ?></div>
 <?php
 }
 if (isset($message)) {
     ?>
-    <div class="alert alert-success"><?php echo $message ?></div>
+    <div class="alert alert-success"><?= $message ?></div>
 <?php
 }
 
@@ -16,14 +16,14 @@ if ($user->isLoggedIn()) {
     ?>
     <div class="form-group">
         <span>
-            <?php echo t('Attach a %s account', t('Google')) ?>
+            <?= t('Attach a %s account', t('Google')) ?>
         </span>
         <hr>
     </div>
     <div class="form-group">
-        <a href="<?php echo \URL::to('/ccm/system/authentication/oauth2/google/attempt_attach'); ?>" class="btn btn-primary btn-google btn-block">
+        <a href="<?= \URL::to('/ccm/system/authentication/oauth2/google/attempt_attach'); ?>" class="btn btn-primary btn-google btn-block">
             <i class="fa fa-google"></i>
-            <?php echo t('Attach a %s account', t('Google')) ?>
+            <?= t('Attach a %s account', t('Google')) ?>
         </a>
     </div>
 <?php
@@ -31,14 +31,14 @@ if ($user->isLoggedIn()) {
     ?>
     <div class="form-group">
         <span>
-            <?php echo t('Sign in with %s', t('Google')) ?>
+            <?= t('Sign in with %s', t('Google')) ?>
         </span>
         <hr>
     </div>
     <div class="form-group">
-        <a href="<?php echo \URL::to('/ccm/system/authentication/oauth2/google/attempt_auth'); ?>" class="btn btn-primary btn-google btn-block">
+        <a href="<?= \URL::to('/ccm/system/authentication/oauth2/google/attempt_auth'); ?>" class="btn btn-primary btn-google btn-block">
             <i class="fa fa-google"></i>
-            <?php echo t('Log in with %s', 'Google') ?>
+            <?= t('Log in with %s', 'Google') ?>
         </a>
     </div>
 <?php

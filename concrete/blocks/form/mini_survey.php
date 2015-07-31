@@ -190,8 +190,8 @@ class MiniSurvey {
 						<div class="miniSurveyOptions">
 							<a href="javascript:void(0)" class="ccm-icon-wrapper" onclick="miniSurvey.moveUp(this,<?php echo $questionRow['msqID']?>);return false"><i class="fa fa-chevron-up"></i></a>
 							<a href="javascript:void(0)" class="ccm-icon-wrapper" onclick="miniSurvey.moveDown(this,<?php echo $questionRow['msqID']?>);return false"><i class="fa fa-chevron-down"></i></a>
-							<a href="javascript:void(0)" class="ccm-icon-wrapper" onclick="miniSurvey.reloadQuestion(<?php echo intval($questionRow['qID']) ?>);return false"><i class="fa fa-pencil"></i></a>
-							<a href="javascript:void(0)" class="ccm-icon-wrapper" onclick="miniSurvey.deleteQuestion(this,<?php echo intval($questionRow['msqID']) ?>,<?php echo intval($questionRow['qID'])?>);return false"><i class="fa fa-trash"></i></a>
+							<a href="javascript:void(0)" class="ccm-icon-wrapper" onclick="miniSurvey.reloadQuestion(<?=intval($questionRow['qID']) ?>);return false"><i class="fa fa-pencil"></i></a>
+							<a href="javascript:void(0)" class="ccm-icon-wrapper" onclick="miniSurvey.deleteQuestion(this,<?=intval($questionRow['msqID']) ?>,<?=intval($questionRow['qID'])?>);return false"><i class="fa fa-trash"></i></a>
 						</div>
 						<div class="clearfix"></div>
 					</li>

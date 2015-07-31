@@ -6,7 +6,10 @@ $this->inc('elements/header.php'); ?>
     <div class="container">
         <div class="row">
             <div class="col-sm-12">
-                <?php print $innerContent; ?>
+
+                <?php Loader::element('system_errors', array('format' => 'block', 'error' => $error, 'success' => $success, 'message' => $message)); ?>
+
+                <? print $innerContent; ?>
             </div>
         </div>
     </div>
